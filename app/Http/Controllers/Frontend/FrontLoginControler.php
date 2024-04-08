@@ -30,7 +30,6 @@ class FrontLoginControler extends Controller
                 return redirect()->route('home')->with('success', 'Login Success');
             }
         } else {
-            // Auth::guard()->logout();
             return redirect()->route('home')->with('error', 'User not found');
         }
     }

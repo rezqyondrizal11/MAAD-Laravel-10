@@ -26,62 +26,80 @@
         Interface
     </div>
 
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin_rekap_show') }}">
-            <i class="fas fa-fw fa-chart-bar"></i>
-            <span>Data Summary</span></a>
-    </li>
 
-    <!-- Nav Item - Utilities Collapse Menu -->
-    {{-- <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-files fa-cog"></i>
-            <span>Rekap Data</span></a>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('admin_rekap_show') }}">Rekap Semua Data</a>
-                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                <a class="collapse-item" href="utilities-other.html">Other</a>
-            </div>
-        </div>
-    </li> --}}
-    <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin_category_show') }}">
-            <i class="fas fa-fw fa-list"></i>
-            <span>Category</span></a>
-    </li>
+    @if (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role == 'Dosen')
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_rekap_show') }}">
+                <i class="fas fa-fw fa-chart-bar"></i>
+                <span>Data Summary</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin-post-show') }}">
+                <i class="fas fa-fw fa-file-alt"></i>
+                <span>Post</span></a>
+        </li>
+        {{-- <li class="nav-item active">
+                <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
+                    <i class="fa fa-file"></i>
+                    <span>Sub Category</span></a>
+            </li> --}}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_user_show') }}">
+                <i class="fas fa-users fa-cog"></i> <span>Users</span>
+                @if ($notif = App\Models\User::where('role', 'pending')->count())
+                    <span class="badge badge-danger">
+                        {{ $notif }}
+                    </span>
+                @endif
 
-    <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin_price_show') }}">
-            <i class="fas fa-fw fa-dollar-sign"></i>
-            <span>Price</span>
-        </a>
-    </li>
-    <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin-post-show') }}">
-            <i class="fas fa-fw fa-file-alt"></i>
-            <span>Post</span></a>
-    </li>
-    {{-- <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
-            <i class="fa fa-file"></i>
-            <span>Sub Category</span></a>
-    </li> --}}
-    <li class="nav-item active">
-        <a class="nav-link" href="{{ route('admin_user_show') }}">
-            <i class="fas fa-users fa-cog"></i> <span>Users</span>
-            @if ($notif = App\Models\User::where('role', 'pending')->count())
-                <span class="badge badge-danger">
-                    {{ $notif }}
-                </span>
-            @endif
+            </a>
+        </li>
+    @elseif (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role == 'Admin')
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_rekap_show') }}">
+                <i class="fas fa-fw fa-chart-bar"></i>
+                <span>Data Summary</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_category_show') }}">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Category</span></a>
+        </li>
 
-        </a>
-    </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_price_show') }}">
+                <i class="fas fa-fw fa-dollar-sign"></i>
+                <span>Price</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin-post-show') }}">
+                <i class="fas fa-fw fa-file-alt"></i>
+                <span>Post</span></a>
+        </li>
+        {{-- <li class="nav-item active">
+                <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
+                    <i class="fa fa-file"></i>
+                    <span>Sub Category</span></a>
+            </li> --}}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_dosen_show') }}">
+                <i class="fas fa-users fa-cog"></i> <span>Dosen</span>
+
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ route('admin_user_show') }}">
+                <i class="fas fa-users fa-cog"></i> <span>Mahasiswa</span>
+                @if ($notif = App\Models\User::where('role', 'pending')->count())
+                    <span class="badge badge-danger">
+                        {{ $notif }}
+                    </span>
+                @endif
+
+            </a>
+        </li>
+    @endif
 
 
 

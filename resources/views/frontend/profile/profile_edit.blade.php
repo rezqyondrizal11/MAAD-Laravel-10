@@ -14,7 +14,7 @@
 
                         <div class="col col-12">
                             <form action="{{ route('profile_update', $show->name) }}" method="post"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" id="editProfileForm">
                                 @csrf
 
                                 <div class="mb-3">
@@ -149,8 +149,14 @@
                                         aria-label=".form-control-lg example" name="password_confirmation">
                                 </div>
 
-                                <div class="text-end">
+                                <div class="text-end" id="updateBtn">
                                     <input type="submit" class="btn btn-success px-4 py-2" value="Update">
+                                </div>
+                                <div class="text-end" style="display: none" id="updatingProfileBtn">
+                                    <button disabled type="submit" class="btn btn-success px-4 py-2">
+                                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                        Updating...
+                                    </button>
                                 </div>
                             </form>
                         </div>

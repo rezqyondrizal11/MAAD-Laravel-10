@@ -18,6 +18,32 @@
                         <input type="email" class="form-control" id="email" placeholder="Email" name="email">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label text-dark ">NIM</label>
+                        <input type="number" class="form-control" id="nim" placeholder="Nim" name="nim">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark ">Skill</label>
+                        <input type="text" class="form-control" id="skill" placeholder="Skill" name="skill">
+                    </div>
+                    <label for="gender" class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
+                    <div class="form-group mb-3 mx-5">
+                        <div class="form-group">
+                            <div class="form-check-info">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="gender" id="male"
+                                        value="Pria"> Pria
+                                </label>
+                            </div>
+                            <div class="form-check-info">
+                                <!-- Sesuaikan nilai margin sesuai kebutuhan -->
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="gender" id="female"
+                                        value="Wanita"> Wanita
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label text-dark ">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                     </div>

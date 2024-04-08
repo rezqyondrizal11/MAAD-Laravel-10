@@ -350,6 +350,22 @@
         document.getElementById("upBtn").style.display = "none";
     });
 </script>
+<script>
+    // Ketika form di-submit
+    document.getElementById("editProfileForm").addEventListener("submit", function(event) {
+        // Menampilkan tombol dengan spinner
+        document.getElementById("updatingProfileBtn").style.display = "block";
+        document.getElementById("updateBtn").style.display = "none";
+    });
+</script>
+<script>
+    // Ketika form di-submit
+    document.getElementById("editPostForm").addEventListener("submit", function(event) {
+        // Menampilkan tombol dengan spinner
+        document.getElementById("updatingPostBtn").style.display = "block";
+        document.getElementById("updatePostBtn").style.display = "none";
+    });
+</script>
 {{-- end loading btn --}}
 
 {{-- button edit link --}}

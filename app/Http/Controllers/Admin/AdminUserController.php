@@ -23,7 +23,7 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:users,name',
             'email' => 'required|email',
             'password' => 'required'
         ]);
@@ -31,6 +31,9 @@ class AdminUserController extends Controller
         $user_store = new User();
         $user_store->name = $request->name;
         $user_store->email = $request->email;
+        $user_store->nim = $request->nim;
+        $user_store->skill = $request->skill;
+        $user_store->gender = $request->gender;
         $user_store->password = Hash::make($request->password);
         $user_store->role = 'umum';
         $user_store->save();
@@ -53,6 +56,9 @@ class AdminUserController extends Controller
         $user_update = User::where('name', $name)->first();
         $user_update->name = $request->name;
         $user_update->email = $request->email;
+        $user_update->nim = $request->nim;
+        $user_update->skill = $request->skill;
+        $user_update->gender = $request->gender;
         $user_update->role = $request->role;
 
         if ($request->password != '') {

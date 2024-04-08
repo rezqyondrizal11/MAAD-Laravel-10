@@ -22,10 +22,13 @@
                                 <thead>
                                     <tr class="bg-primary text-light">
                                         <th>No</th>
-                                        <th>Nama User</th>
+                                        <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                        <th>NIM</th>
+                                        <th>Skill</th>
+                                        <th>Jenis Kelamin</th>
+                                        <th>Status Akun</th>
+                                        <th style="min-width: 10rem">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -34,6 +37,15 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->name }}</td>
                                             <td>{{ $item->email }}</td>
+                                            <td>{{ $item->nim }}</td>
+                                            <td>
+                                                @if ($item->skill)
+                                                    {{ $item->skill }}
+                                                @else
+                                                    Belum di edit
+                                                @endif
+                                            </td>
+                                            <td>{{ $item->gender }}</td>
                                             <td>{{ $item->role }}
                                                 @if ($item->role == 'pending')
                                                     <a href="{{ route('admin_make_premium', $item->name) }}"

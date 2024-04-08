@@ -452,19 +452,16 @@ class FrontPostController extends Controller
                 function ($attribute, $value, $fail) use ($pilkat) {
                     $ext = $value->getClientOriginalExtension();
                     $categoryFileTypes = [
-                        3 => ['png', 'jpg', 'jpeg', 'eps', 'psd', 'ai'], // Tipe file untuk kategori photo
-                        4 => ['mp4', 'mkv', 'webm'], // Tipe file untuk kategori video
-                        5 => ['mp3', 'm4a'], // Tipe file untuk kategori audio
+                        3 => ['png', 'jpg', 'jpeg', 'eps', 'psd', 'ai'],
+                        4 => ['mp4', 'mkv', 'webm'],
+                        5 => ['mp3', 'm4a'],
                     ];
 
-                    // Periksa apakah kategori yang dipilih memiliki definisi tipe file
                     if (isset($categoryFileTypes[$pilkat])) {
-                        // Jika tipe file yang diunggah tidak ada dalam definisi kategori, tampilkan pesan kesalahan
                         if (!in_array($ext, $categoryFileTypes[$pilkat])) {
                             $fail('Tipe file yang diunggah tidak sesuai dengan kategori yang dipilih.');
                         }
                     } else {
-                        // Jika kategori yang dipilih tidak memiliki definisi tipe file, tampilkan pesan kesalahan
                         $fail('Kategori yang dipilih tidak memiliki tipe file ini.');
                     }
                 },
@@ -475,19 +472,16 @@ class FrontPostController extends Controller
                 function ($attribute, $value, $fail) use ($pilkat) {
                     $ext = $value->getClientOriginalExtension();
                     $categoryFileTypes = [
-                        3 => ['eps', 'psd', 'ai', 'zip', 'rar'], // Tipe file untuk file2 dengan kategori photo
-                        4 => ['aep', 'aepx', 'prproj', 'zip', 'rar'], // Tipe file untuk file2 dengan kategori video
-                        5 => ['aup3', 'sesx', 'als', 'zip', 'rar'], // Tipe file untuk file2 dengan kategori audio
+                        3 => ['eps', 'psd', 'ai', 'zip', 'rar'],
+                        4 => ['aep', 'aepx', 'prproj', 'zip', 'rar'],
+                        5 => ['aup3', 'sesx', 'als', 'zip', 'rar'],
                     ];
 
-                    // Periksa apakah kategori yang dipilih memiliki definisi tipe file
                     if (isset($categoryFileTypes[$pilkat])) {
-                        // Jika tipe file yang diunggah tidak ada dalam definisi kategori, tampilkan pesan kesalahan
                         if (!in_array($ext, $categoryFileTypes[$pilkat])) {
                             $fail('Tipe file yang diunggah tidak sesuai dengan kategori yang dipilih.');
                         }
                     } else {
-                        // Jika kategori yang dipilih tidak memiliki definisi tipe file, tampilkan pesan kesalahan
                         $fail('Kategori yang dipilih tidak memiliki tipe file ini.');
                     }
                 },
@@ -522,7 +516,6 @@ class FrontPostController extends Controller
                 } elseif ($update->file == '') {
                     if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
                         $pathVideo = 'video';
-                        $pathThumbnail = 'video/thumbnail';
                         $file = $request->file('file')->getClientOriginalName();
                         $fileName = pathinfo($file, PATHINFO_FILENAME);
                         $publicId = date('Y-m-d_His') . '_' . $fileName;
@@ -535,17 +528,6 @@ class FrontPostController extends Controller
                                 "folder" => $pathVideo,
                             ]
                         )->getSecurePath();
-
-                        // Upload thumbnail (gambar GIF) ke Cloudinary
-                        // $uploadThumbnail = Cloudinary::uploadFile($request->file('file')->getRealPath(), [
-                        //     "public_id" => $publicId . '-thumbnail',
-                        //     "folder" => $pathThumbnail,
-                        //     "transformation" => [
-                        //         "width" => 200,
-                        //         "start_offset" => "auto",
-                        //         "resource_type" => "video"
-                        //     ]
-                        // ]);
 
                         // Konversi video ke kualitas 720p, 480p, dan 360p
                         $path720p = 'video/720p';
@@ -647,17 +629,6 @@ class FrontPostController extends Controller
                                 "folder" => $pathVideo,
                             ]
                         )->getSecurePath();
-
-                        // Upload thumbnail (gambar GIF) ke Cloudinary
-                        // $uploadThumbnail = Cloudinary::uploadFile($request->file('file')->getRealPath(), [
-                        //     "public_id" => $publicId . '-thumbnail',
-                        //     "folder" => $pathThumbnail,
-                        //     "transformation" => [
-                        //         "width" => 200,
-                        //         "start_offset" => "auto",
-                        //         "resource_type" => "video"
-                        //     ]
-                        // ]);
 
                         // Konversi video ke kualitas 720p, 480p, dan 360p
                         $path720p = 'video/720p';
@@ -778,7 +749,6 @@ class FrontPostController extends Controller
         $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
         $update->slug = $slug;
         $update->name = $request->title;
-        // $update->category_id = $newCategory;
         $update->url = $request->linkyt;
 
         if (strpos($request->linkgd, 'preview') !== false) {

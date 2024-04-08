@@ -30,6 +30,7 @@ class AdminLoginController extends Controller
         $store->nama = $request->nama;
         $store->email = $request->email;
         $store->password = Hash::make($request->password);
+        $store->role = 'Dosen';
         $store->save();
         return redirect()->route('admin_login')->with('success', 'Berhasil Membuat Akun');
     }

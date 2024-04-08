@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDosenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminPostController;
 use App\Http\Controllers\Admin\AdminUserController;
@@ -86,6 +87,14 @@ Route::post('admin/users/update/{name}', [AdminUserController::class, 'update'])
 Route::get('admin/users/delete/{name}', [AdminUserController::class, 'delete'])->name('admin_user_delete')->middleware('admin:admin');
 //end admin users
 
+// admin dosen
+Route::get('admin/dosen/show', [AdminDosenController::class, 'show'])->name('admin_dosen_show')->middleware('admin:admin');
+Route::get('admin/dosen/create', [AdminDosenController::class, 'create'])->name('admin_dosen_create')->middleware('admin:admin');
+Route::post('admin/dosen/store', [AdminDosenController::class, 'store'])->name('admin_dosen_store')->middleware('admin:admin');
+Route::get('admin/dosen/edit/{nama}', [AdminDosenController::class, 'edit'])->name('admin_dosen_edit')->middleware('admin:admin');
+Route::post('admin/dosen/update/{nama}', [AdminDosenController::class, 'update'])->name('admin_dosen_update')->middleware('admin:admin');
+Route::get('admin/dosen/delete/{nama}', [AdminDosenController::class, 'delete'])->name('admin_dosen_delete')->middleware('admin:admin');
+// end admin dosen
 // admin rekap
 Route::get('admin/rekap/show', [AdminRekapController::class, 'show'])->name('admin_rekap_show')->middleware('admin:admin');
 // end admin rekap

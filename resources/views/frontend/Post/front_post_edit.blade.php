@@ -11,7 +11,8 @@
 
                     <hr>
 
-                    <form action="{{ route('post_update', $edit->slug) }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('post_update', $edit->slug) }}" method="post" enctype="multipart/form-data"
+                        id="editPostForm">
                         @csrf
                         <div class="mb-3">
                             <label for="exampleFormControlInput1" class="form-label">Judul</label>
@@ -365,8 +366,14 @@
                             <textarea class="form-control" id="" rows="3" name="body">{{ $edit->body }}</textarea>
                         </div>
 
-                        <div class="text-end">
+                        <div class="text-end" id="updatePostBtn">
                             <input type="submit" class="btn btn-success px-4 py-2" value="Update Post">
+                        </div>
+                        <div class="text-end" style="display: none" id="updatingPostBtn">
+                            <button disabled type="submit" class="btn btn-success px-4 py-2">
+                                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                Updating Post...
+                            </button>
                         </div>
                     </form>
                 </div>

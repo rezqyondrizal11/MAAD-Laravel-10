@@ -16,7 +16,6 @@ class FrontProfileController extends Controller
         $show = User::where('name', $name)->first();
 
         if ($show != null) {
-            // Jika user ditemukan, ambil semua post yang dimilikinya
             $post = Post::where('user_id', $show->id)
                 ->whereHas('rCategory', function ($query) {
                     $query->where('id', 3);
@@ -27,7 +26,6 @@ class FrontProfileController extends Controller
 
             return view('frontend.profile.profile_show', compact('post', 'show', 'page'));
         } else {
-            // Handle jika user tidak ditemukan
             echo "gagal";
         }
     }
@@ -118,7 +116,6 @@ class FrontProfileController extends Controller
                             $ext = $request->file('foto_profil')->extension();
                             $final = 'profil' . time() . '.' . $ext;
 
-                            // menyimpan gambar asli
                             $request->file('foto_profil')->move(storage_path('app/public/uploads/photo/profil/'), $final);
                             $update->foto_profil = $final;
                         }
@@ -129,7 +126,6 @@ class FrontProfileController extends Controller
                         $ext = $request->file('foto_profil')->extension();
                         $final = 'profil' . time() . '.' . $ext;
 
-                        // menyimpan gambar asli
                         $request->file('foto_profil')->move(storage_path('app/public/uploads/photo/profil'), $final);
                         $update->foto_profil = $final;
                     }

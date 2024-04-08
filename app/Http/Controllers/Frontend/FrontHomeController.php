@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 // use Intervention\Image\Facades\Image;
@@ -21,6 +22,17 @@ class FrontHomeController extends Controller
 {
     public function index(Request $request)
     {
+        $userLogin = Auth::user();
+        if ($userLogin) {
+            $user = User::where('id', $userLogin->id)->first();
+            $today = Carbon::now();
+            if ($user->premium_expiry < $today) {
+                $user->role = 'umum';
+                $user->update();
+            }
+        }
+
+
         // $post = Post::with('rUser')->get();
         $search = $request->input('search');
         $perPage = 12;
@@ -47,11 +59,6 @@ class FrontHomeController extends Controller
     }
     public function photo(Request $request)
     {
-        // $search = $request->input('search_photo');
-        // $pattern = 'photo';
-        // $reso = Post::query()->distinct()->select('resolution')->get();
-        // $post = Post::where('name', 'like', '%' . $search . '%')->Where('file', 'like', '%' . $pattern . '%')->latest()->with('rUser')->paginate(12);
-
         $search = $request->input('search_photo');
         $extensions = ['png', 'jpg', 'jpeg'];
 
