@@ -9,17 +9,17 @@
                 $path_photo = asset('storage/uploads/photo/' . $post->file);
                 $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
 
-                $path_video = $post->file;
+                $path_video = asset('storage/uploads/video/' . $post->file);
                 $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
 
-                $path_video_720p = $post->q720p;
-                $extvideo720p = pathinfo($path_video_720p, PATHINFO_EXTENSION);
+                // $path_video_720p = $post->q720p;
+                // $extvideo720p = pathinfo($path_video_720p, PATHINFO_EXTENSION);
 
-                $path_video_480p = $post->q480p;
-                $extvideo480p = pathinfo($path_video_480p, PATHINFO_EXTENSION);
+                // $path_video_480p = $post->q480p;
+                // $extvideo480p = pathinfo($path_video_480p, PATHINFO_EXTENSION);
 
-                $path_video_360p = $post->q360p;
-                $extvideo360p = pathinfo($path_video_360p, PATHINFO_EXTENSION);
+                // $path_video_360p = $post->q360p;
+                // $extvideo360p = pathinfo($path_video_360p, PATHINFO_EXTENSION);
 
                 $path_audio = asset('storage/uploads/audio/' . $post->file);
                 $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
@@ -300,7 +300,7 @@
                                 @endif
                             </video>
                         </div>
-                    @elseif ($page == '720p')
+                        {{-- @elseif ($page == '720p')
                         <div class="card shadow">
                             <video class="object-fit-contain" controls style="max-height:40rem;">
                                 @if ($extvideo720p == 'mp4')
@@ -341,9 +341,9 @@
                                     <source src="{{ $path_video_360p }}" alt="" type="video/webm">
                                 @endif
                             </video>
-                        </div>
+                        </div> --}}
                     @endif
-                    <div class="text-center my-3">
+                    {{-- <div class="text-center my-3">
                         <a href="{{ route('detail', [$post->slug]) }}"
                             class="btn btn-sm {{ $page == 'detail' ? ' btn-orange btn-danger' : 'btn-secondary' }}">Original</a>
                         <a href="{{ route('720p', [$post->slug]) }}"
@@ -352,15 +352,15 @@
                             class="btn btn-sm {{ $page == '480p' ? ' btn-orange btn-danger' : 'btn-secondary' }}">480p</a>
                         <a href="{{ route('360p', [$post->slug]) }}"
                             class="btn btn-sm {{ $page == '360p' ? ' btn-orange btn-danger' : 'btn-secondary' }}">360p</a>
-                    </div>
+                    </div> --}}
 
                     {{-- Video lainnya --}}
                     <div class="row">
                         <div class="" style="height: 10vh"></div>
-                        <div class="fw-bold">Aset Lainnya</div>
+                        <div class="fw-bold">Aset Lainnya...</div>
                         @foreach ($posts as $item)
                             @php
-                                $path_video = $item->file;
+                                $path_video = asset('storage/uploads/video/' . $item->file);
                                 $extvideoItem = pathinfo($path_video, PATHINFO_EXTENSION);
                             @endphp
                             @if ($extvideoItem == 'mp4' || $extvideoItem == 'mkv' || $extvideoItem == 'webm')
@@ -489,6 +489,7 @@
                                         </div>
                                     @endif
                                     {{-- end Login Premium --}}
+
                                     {{-- Login Umum --}}
                                 @elseif (Auth::guard('web')->user()->role == 'umum')
                                     @if ($post->file_mentah && $post->fpgd)
@@ -525,6 +526,7 @@
                                         </div>
                                     @endif
                                     {{-- end Login Umum --}}
+
                                     {{-- Login Pending --}}
                                 @elseif (Auth::guard('web')->user()->role == 'pending')
                                     @if ($post->file_mentah && $post->fpgd)
@@ -564,7 +566,12 @@
 
                                 <br>
                                 <div class="col col-12 col-lg-7 mt-3">
-                                    <div class="btn-group dropend">
+                                    <a href="{{ route('download', $post->file) }}"
+                                        class="btn btn-sm btn-success form-control download-btn">
+                                        <span class="small"><i class="bi bi-download"></i> Download
+                                            {{ $extvideo }}</span>
+                                    </a>
+                                    {{-- <div class="btn-group dropend">
                                         <button type="button" class="btn btn-sm btn-success dropdown-toggle"
                                             data-bs-toggle="dropdown" aria-expanded="false">
                                             <span class="small">Download {{ $extvideo }}</span>
@@ -579,7 +586,7 @@
                                             <li><a href="{{ route('download-video', ['filename' => $post->slug, 'quality' => 'q360p']) }}"
                                                     class="dropdown-item small">360p</a></li>
                                         </ul>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 {{-- Tidak Login --}}
@@ -938,7 +945,7 @@
                         <div class="fw-bold">Aset Lainnya</div>
                         @foreach ($posts as $item)
                             @php
-                                $path_video = $item->file;
+                                $path_video = asset('storage/uploads/video/' . $item->file);
                                 $extvideoItem2 = pathinfo($path_video, PATHINFO_EXTENSION);
                             @endphp
                             @if ($extvideoItem2 == 'mp4' || $extvideoItem2 == 'mkv' || $extvideoItem2 == 'webm')
@@ -1244,7 +1251,7 @@
                             {{-- Video lainnya --}}
                             @foreach ($posts as $item)
                                 @php
-                                    $path_video2 = $item->file;
+                                    $path_video2 = asset('storage/uploads/video/' . $item->file);
                                     $extvideoItem2 = pathinfo($path_video2, PATHINFO_EXTENSION);
                                 @endphp
                                 @if ($extvideoItem2 == 'mp4' || $extvideoItem2 == 'mkv' || $extvideoItem2 == 'webm')
@@ -1764,16 +1771,10 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel"><span class="text-danger">
-                            <i class="bi bi-exclamation-triangle-fill"></i></span>
-                        Penting !!</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col col-12 text-center">
-                            <img src="{{ asset('dist_frontend/img/UNP Asset.png') }}" alt="" width="200px">
+                            <img src="{{ asset('dist_frontend/img/alert.gif') }}" alt="" width="100px">
                         </div>
                         <div class="col col-12 mt-2">
                             <p class="fs-5 p-3"> Ingatlah untuk mention
@@ -1782,7 +1783,6 @@
                                 ini dan sertakan di project atau situs web Anda.</p>
                         </div>
                     </div>
-                    {{-- <a href="{{ $url }}">{{ $url }}</a> --}}
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Recipient's username"
                             aria-label="Recipient's username" aria-describedby="button-addon2"
@@ -1802,22 +1802,20 @@
     <div class="modal fade" id="modalCopy" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    {{-- <img src="{{ asset('dist_frontend/img/UNP Asset.png') }}" alt="" width="200px"> --}}
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col col-12 mt-2">
-                            <p class="fs-3 text-center">
-                                <span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i></span>
-                                Berhasil menyalin
-                            </p>
+                        <div class="col col-12 mt-2 text-center">
+                            <span class="text-success fs-1"><img src="{{ asset('dist_frontend/img/approved.gif') }}"
+                                    class="img fluid w-25" alt=""></span>
+                            <p class="fs-4">Teks berhasil disalin.</p>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-orange btn-danger" data-bs-dismiss="modal">Close</button>
+                    <div class="row justify-content-center">
+                        <div class="col col-2">
+                            <button type="button" class="btn btn-sm btn-orange btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

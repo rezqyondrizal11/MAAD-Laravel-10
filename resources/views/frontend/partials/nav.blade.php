@@ -8,7 +8,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
+                <li class="nav-item mt-1">
                     <a class="nav-link mx-4 link mt-1" aria-current="page" href="{{ route('home') }}"><i
                             class="bi bi-house-fill text-light"></i>
                         <span class="text-light"> Home</span></a>
@@ -18,7 +18,9 @@
                         <a class="nav-link dropdown-toggle ms-4 ms-lg-0 text-light link mt-1" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             @php
-                                $path_photo = asset('storage/uploads/photo/profil/' . Auth::guard()->user()->foto_profil);
+                                $path_photo = asset(
+                                    'storage/uploads/photo/profil/' . Auth::guard()->user()->foto_profil,
+                                );
                                 $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
                             @endphp
                             @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')

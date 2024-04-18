@@ -101,6 +101,8 @@ class FrontPremiumController extends Controller
                             $user->update(['premium_expiry' => now()->addMonths(6)]);
                         } elseif ($selectedPackage == '1 Tahun') {
                             $user->update(['premium_expiry' => now()->addYear()]);
+                        } elseif ($selectedPackage == '2 Tahun') {
+                            $user->update(['premium_expiry' => now()->addYears(2)]);
                         } elseif ($selectedPackage == '3 Menit') {
                             $user->update(['premium_expiry' => now()->addMinutes(3)]);
                         }

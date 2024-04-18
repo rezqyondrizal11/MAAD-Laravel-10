@@ -115,24 +115,28 @@
             </div> --}}
         </div>
 
-        <div class="row d-flex justify-content-center">
+        <div class="row justify-content-center">
             @foreach ($price as $item)
-                <div class="col col-12 col-md-6 col-lg-3 text-center my-auto d-flex justify-content-center mt-3">
-                    <div class="card text-center" style="max-width: 20rem">
-                        <div class="card-header fw-bold text-light fs-5 bg-black-custom">
-                            {{ $item->name }}
+                <div class="col-12 col-md-6 col-lg-3 mt-3">
+                    <div class="card border-0 shadow">
+                        <div class="card-header bg-transparent border-0 text-dark fs-4 fw-bold py-3"><span
+                                class="bg-warning py-1 px-3 rounded-2">{{ $item->name }}</span>
                         </div>
                         <div class="card-body">
-                            <p class="fs-3 fw-bold text-yellow">Rp. {{ $item->price }}</p>
-                            {{-- {{ dd($item->price) }} --}}
-                            <p class="card-text">Tingkatkan akun Anda ke versi Premium dan nikmati keuntungannya.</p>
+                            <h5 class="card-title fs-3 text-success text-center fw-bold text-underlined"><u>Rp.
+                                    {{ $item->price }}</u></h5>
+                            <p class="card-text px-4 mt-3">Tingkatkan akun Anda ke versi Premium dan nikmati keuntungannya.
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-end">
                             <a href="{{ route('choice', ['name' => Auth::user()->name, 'price' => $item->price]) }}"
-                                class="btn btn-sm bg-yellow btn-warning text-light">Buy Now</a>
+                                class="btn btn-sm btn-success text-light fw-bold">Buy Now</a>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
+
     </div>
     {{-- <div class="" style="height: 32vh"></div>
 

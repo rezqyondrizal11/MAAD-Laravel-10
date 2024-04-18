@@ -49,10 +49,11 @@
                     </div>
                     <div class="form-group mb-3">
                         <label>Status Akun</label>
-                        <select name="role" class="form-control" value="{{ $edit->role }}">
-                            <option>premium</option>
-                            <option>umum</option>
-                            <option>pending</option>
+                        <select name="role" class="form-control">
+                            <option value="" disabled selected hidden>--- Pilih ---</option>
+                            <option value="premium" @if ($edit->role == 'premium') selected @endif>premium</option>
+                            <option value="umum" @if ($edit->role == 'umum') selected @endif>umum</option>
+                            <option value="pending" @if ($edit->role == 'pending') selected @endif>pending</option>
                         </select>
                     </div>
                     <div class="mb-3">

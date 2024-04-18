@@ -111,7 +111,6 @@ Route::post('admin/price/store', [AdminPriceController::class, 'store'])->name('
 Route::get('admin/price/edit/{name}', [AdminPriceController::class, 'edit'])->name('admin_price_edit')->middleware('admin:admin');
 Route::post('admin/price/update/{name}', [AdminPriceController::class, 'update'])->name('admin_price_update')->middleware('admin:admin');
 Route::get('admin/price/delete/{name}', [AdminPriceController::class, 'delete'])->name('admin_price_delete')->middleware('admin:admin');
-
 // end admin Price
 
 // Frontend

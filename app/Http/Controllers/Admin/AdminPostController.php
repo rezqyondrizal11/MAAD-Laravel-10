@@ -13,9 +13,10 @@ class AdminPostController extends Controller
 {
     public function show()
     {
+        $page = 'post';
         $posts = Post::with('rCategory')->with('rUser')->latest()->get();
         // $data = Post::latest()->get();
-        return view('admin.post.post_show', compact('posts'));
+        return view('admin.post.post_show', compact('posts', 'page'));
     }
 
     public function delete($slug)
@@ -25,11 +26,6 @@ class AdminPostController extends Controller
         if (!$delete) {
             return redirect()->back()->with('error', 'Postingan tidak ditemukan.');
         }
-
-        $publicId = $delete->cPublicId;
-        $publicId720 = $delete->cPublicId720;
-        $publicId480 = $delete->cPublicId480;
-        $publicId360 = $delete->cPublicId360;
 
         $filePaths = [];
 
@@ -44,13 +40,9 @@ class AdminPostController extends Controller
                 ]);
             } elseif (in_array($extension, ['mp4', 'avi', 'mov', 'aep', 'aepx', 'prproj'])) {
                 $filePaths = array_merge($filePaths, [
+                    'public/uploads/video/' . $delete->file,
                     'public/uploads/rawvideo/' . $delete->file_mentah,
                 ]);
-                // Hapus dari Cloudinary
-                Cloudinary::destroy($publicId, ['resource_type' => 'video']);
-                Cloudinary::destroy($publicId720, ['resource_type' => 'video']);
-                Cloudinary::destroy($publicId480, ['resource_type' => 'video']);
-                Cloudinary::destroy($publicId360, ['resource_type' => 'video']);
             } elseif (in_array($extension, ['mp3', 'm4a', 'wav', 'aup3', 'sesx', 'als'])) {
                 $filePaths = array_merge($filePaths, [
                     'public/uploads/audio/' . $delete->file,

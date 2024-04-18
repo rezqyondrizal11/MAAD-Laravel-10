@@ -32,7 +32,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->name }}</td>
-                                            <td>{{ $item->price }}</td>
+                                            <td>Rp.{{ $item->price }}</td>
                                             <td>
                                                 <a href="{{ route('admin_price_edit', $item->name) }}"
                                                     class="btn btn-sm btn-success"><i class="fa fa-edit"></i>

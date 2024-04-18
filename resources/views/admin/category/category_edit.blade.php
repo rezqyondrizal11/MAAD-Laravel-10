@@ -9,18 +9,23 @@
                 @csrf
                 <div class="card-body">
                     <h5 class="card-title">Update Category</h5>
-                    <div class="mb-3">
-                        <label class="form-label text-dark ">Category Name</label>
-                        <input type="text" class="form-control" id="category_name" placeholder="Category Name"
-                            value="{{ $edit->name }}" name="category_name">
-                    </div>
                     <div class="form-group mb-3">
+                        <label>Category Name</label>
+                        <select name="category_name" class="form-control">
+                            <option value="" disabled selected hidden>--- Pilih ---</option>
+                            <option value="Photo" @if ($edit->name == 'Photo') selected @endif>Photo</option>
+                            <option value="Video" @if ($edit->name == 'Video') selected @endif>Video</option>
+                            <option value="Audio" @if ($edit->name == 'Audio') selected @endif>Audio</option>
+                            <option value="Awok" @if ($edit->name == 'Awok') selected @endif>Awok</option>
+                        </select>
+                    </div>
+                    {{-- <div class="form-group mb-3">
                         <label>Show On Menu?</label>
                         <select name="show_on_menu" class="form-control">
                             <option value="Show" @if ($edit->show_on_menu == 'Show') selected @endif>Show</option>
                             <option value="Hide" @if ($edit->show_on_menu == 'Hide') selected @endif>Hide</option>
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="my-3">
                         <input type="submit" class="btn btn-primary" value="Update">
                     </div>

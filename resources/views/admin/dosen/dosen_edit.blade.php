@@ -21,9 +21,10 @@
                     </div>
                     <div class="form-group mb-3">
                         <label>Role</label>
-                        <select name="role" class="form-control" value="{{ $edit->role }}">
-                            <option>Admin</option>
-                            <option>Dosen</option>
+                        <select name="role" class="form-control">
+                            <option value="" disabled selected hidden>--- Pilih ---</option>
+                            <option value="Admin" @if ($edit->role == 'Admin') selected @endif>Admin</option>
+                            <option value="Dosen" @if ($edit->role == 'Dosen') selected @endif>Dosen</option>
                         </select>
                     </div>
                     <div class="mb-3">

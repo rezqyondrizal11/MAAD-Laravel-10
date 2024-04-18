@@ -5,17 +5,28 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Price;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPriceController extends Controller
 {
     public function show()
     {
-        $price = Price::get();
-        return view('admin.price.price_show', compact('price'));
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin') {
+            $page = 'price';
+            $price = Price::get();
+            return view('admin.price.price_show', compact('price', 'page'));
+        } else {
+            return redirect()->route('admin_login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
     public function create()
     {
-        return view('admin.price.price_create');
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin') {
+            $page = 'price';
+            return view('admin.price.price_create', compact('page'));
+        } else {
+            return redirect()->route('admin_login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
     public function store(Request $request)
     {
@@ -32,8 +43,13 @@ class AdminPriceController extends Controller
     }
     public function edit($name)
     {
-        $edit = Price::where('name', $name)->first();
-        return view('admin.price.price_edit', compact('edit'));
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin') {
+            $page = 'price';
+            $edit = Price::where('name', $name)->first();
+            return view('admin.price.price_edit', compact('edit', 'page'));
+        } else {
+            return redirect()->route('admin_login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
     public function update(Request $request, $name)
     {

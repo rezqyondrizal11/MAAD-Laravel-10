@@ -11,13 +11,15 @@ class AdminUserController extends Controller
 {
     public function show()
     {
+        $page = 'user';
         $users = User::get();
-        return view('admin.user.user_show', compact('users'));
+        return view('admin.user.user_show', compact('users', 'page'));
     }
 
     public function create()
     {
-        return view('admin.user.user_create');
+        $page = 'user';
+        return view('admin.user.user_create', compact('page'));
     }
 
     public function store(Request $request)
@@ -42,8 +44,9 @@ class AdminUserController extends Controller
 
     public function edit($name)
     {
+        $page = 'user';
         $edit = User::where('name', $name)->first();
-        return view('admin.user.user_edit', compact('edit'));
+        return view('admin.user.user_edit', compact('edit', 'page'));
     }
 
     public function update(Request $request, $name)

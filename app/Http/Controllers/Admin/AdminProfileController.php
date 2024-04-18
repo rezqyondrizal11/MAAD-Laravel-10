@@ -11,8 +11,9 @@ class AdminProfileController extends Controller
 {
     public function edit($nama)
     {
+        $page = 'profile';
         $edit = Admin::where('nama', $nama)->first();
-        return view('admin.profile.profile_edit', compact('edit'));
+        return view('admin.profile.profile_edit', compact('edit', 'page'));
     }
 
     public function update(Request $request, $nama)

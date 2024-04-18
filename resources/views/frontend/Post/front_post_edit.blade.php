@@ -29,7 +29,7 @@
                             $path_photo = asset('storage/uploads/photo/' . $post->file);
                             $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
 
-                            $path_video = $post->file;
+                            $path_video = asset('storage/uploads/video/' . $post->file);
                             $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
 
                             $path_audio = asset('storage/uploads/audio/' . $post->file);

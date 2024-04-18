@@ -14,8 +14,7 @@ class AdminRekapController extends Controller
 {
     public function show(Request $request)
     {
-        // $users = User::all();
-        // $post = Post::count();
+        $page = 'rekap';
         $userPost = User::leftJoin('posts', 'users.id', '=', 'posts.user_id')
             ->select(
                 'users.*',
@@ -64,6 +63,6 @@ class AdminRekapController extends Controller
             return Excel::download(new UserRekapExport($userPost), $fileName);
         }
 
-        return view('admin.rekap.rekap', compact('userNIM', 'userPost', 'distinctYears', 'selectedYear'));
+        return view('admin.rekap.rekap', compact('userNIM', 'userPost', 'distinctYears', 'selectedYear', 'page'));
     }
 }

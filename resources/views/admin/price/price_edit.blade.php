@@ -9,10 +9,16 @@
                 @csrf
                 <div class="card-body">
                     <h5 class="card-title">Update Price</h5>
-                    <div class="mb-3">
-                        <label class="form-label text-dark ">Price Name</label>
-                        <input type="text" class="form-control" id="category_name" placeholder="Price Name"
-                            name="priceName" value="{{ $edit->name }}">
+                    <div class="form-group mb-3">
+                        <label>Price Name</label>
+                        <select name="priceName" class="form-control">
+                            <option value="" disabled selected hidden>--- Pilih ---</option>
+                            <option value="1 Bulan" @if ($edit->name == '1 Bulan') selected @endif>1 Bulan</option>
+                            <option value="6 Bulan" @if ($edit->name == '6 Bulan') selected @endif>6 Bulan</option>
+                            <option value="1 Tahun" @if ($edit->name == '1 Tahun') selected @endif>1 Tahun</option>
+                            <option value="2 Tahun" @if ($edit->name == '2 Tahun') selected @endif>2 Tahun</option>
+                            <option value="3 Menit" @if ($edit->name == '3 Menit') selected @endif>3 Menit</option>
+                        </select>
                     </div>
                     <div class="form-group mb-3">
                         <label>Harga</label>

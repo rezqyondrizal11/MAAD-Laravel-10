@@ -14,6 +14,7 @@ class AdminDashboardController extends Controller
 {
     public function dashboard()
     {
+        $page = 'dashboard';
         $countUser = User::count();
         $post = Post::count();
         $category = Category::count();
@@ -60,6 +61,6 @@ class AdminDashboardController extends Controller
             return $user;
         });
 
-        return view('admin.index', compact('countUser', 'post', 'category', 'userPremium', 'photoCount', 'videoCount', 'audioCount', 'usersWithPostCount', 'usersNIM', 'userPost', 'userNIM'));
+        return view('admin.index', compact('countUser', 'post', 'category', 'userPremium', 'photoCount', 'videoCount', 'audioCount', 'usersWithPostCount', 'usersNIM', 'userPost', 'userNIM', 'page'));
     }
 }

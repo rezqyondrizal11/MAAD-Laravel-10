@@ -23,7 +23,7 @@
                                     <tr class="bg-primary text-light">
                                         <th>No</th>
                                         <th>Category Name</th>
-                                        <th>Show On Menu</th>
+                                        {{-- <th>Show On Menu</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -32,7 +32,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $category->name }}</td>
-                                            <td>{{ $category->show_on_menu }}</td>
+                                            {{-- <td>{{ $category->show_on_menu }}</td> --}}
                                             <td>
                                                 <a href="{{ route('admin_category_edit', $category->name) }}"
                                                     class="btn btn-sm btn-success"><i class="fa fa-edit"></i>

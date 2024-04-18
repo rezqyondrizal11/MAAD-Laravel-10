@@ -11,12 +11,14 @@ class AdminDosenController extends Controller
 {
     public function show()
     {
+        $page = 'dosen';
         $dosens = Admin::get();
-        return view('admin.dosen.dosen_show', compact('dosens'));
+        return view('admin.dosen.dosen_show', compact('dosens', 'page'));
     }
     public function create()
     {
-        return view('admin.dosen.dosen_create');
+        $page = 'dosen';
+        return view('admin.dosen.dosen_create', compact('page'));
     }
 
     public function store(Request $request)
@@ -38,8 +40,9 @@ class AdminDosenController extends Controller
 
     public function edit($nama)
     {
+        $page = 'dosen';
         $edit = Admin::where('nama', $nama)->first();
-        return view('admin.dosen.dosen_edit', compact('edit'));
+        return view('admin.dosen.dosen_edit', compact('edit', 'page'));
     }
 
     public function update(Request $request, $nama)

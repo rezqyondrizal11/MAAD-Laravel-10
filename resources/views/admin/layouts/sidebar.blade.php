@@ -12,7 +12,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ $page == 'dashboard' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin_dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
@@ -28,12 +28,12 @@
 
 
     @if (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role == 'Dosen')
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'rekap' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_rekap_show') }}">
                 <i class="fas fa-fw fa-chart-bar"></i>
                 <span>Data Summary</span></a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin-post-show') }}">
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Post</span></a>
@@ -43,9 +43,9 @@
                     <i class="fa fa-file"></i>
                     <span>Sub Category</span></a>
             </li> --}}
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'user' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_user_show') }}">
-                <i class="fas fa-users fa-cog"></i> <span>Users</span>
+                <i class="fas fa-users fa-cog"></i> <span>Mahasiswa</span>
                 @if ($notif = App\Models\User::where('role', 'pending')->count())
                     <span class="badge badge-danger">
                         {{ $notif }}
@@ -55,24 +55,24 @@
             </a>
         </li>
     @elseif (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role == 'Admin')
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'rekap' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_rekap_show') }}">
                 <i class="fas fa-fw fa-chart-bar"></i>
                 <span>Data Summary</span></a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'category' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_category_show') }}">
                 <i class="fas fa-fw fa-list"></i>
                 <span>Category</span></a>
         </li>
 
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'price' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_price_show') }}">
                 <i class="fas fa-fw fa-dollar-sign"></i>
                 <span>Price</span>
             </a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin-post-show') }}">
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Post</span></a>
@@ -82,13 +82,13 @@
                     <i class="fa fa-file"></i>
                     <span>Sub Category</span></a>
             </li> --}}
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'dosen' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_dosen_show') }}">
                 <i class="fas fa-users fa-cog"></i> <span>Dosen</span>
 
             </a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item {{ $page == 'user' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_user_show') }}">
                 <i class="fas fa-users fa-cog"></i> <span>Mahasiswa</span>
                 @if ($notif = App\Models\User::where('role', 'pending')->count())

@@ -14,7 +14,7 @@
                             <p class="fs-3">Upload Post</p>
                         </div>
                         <div class="col col-lg-4 text-end">
-                            <button class="btn btn-sm btn-success rounded-pill" data-bs-toggle="modal"
+                            <button class="btn btn-sm btn-orange btn-danger rounded-pill" data-bs-toggle="modal"
                                 data-bs-target="#ketentuan">
                                 <i class="bi bi-lock-fill"></i>
                             </button>
@@ -106,7 +106,7 @@
                         <div class="form-group mb-3" id="input6">
                             <label>Kategori</label>
                             <select name="category_menu" class="form-select form-select-sm mt-2" id="category_menu">
-                                <option value="">Pilih Menu...</option>
+                                <option value="" disabled selected hidden>Pilih Menu...</option>
                                 @foreach ($category as $item)
                                     <option value="{{ $item->id }}">
                                         {{ $item->name }}
@@ -138,9 +138,11 @@
 
     <!-- Modal -->
     <div class="modal fade" id="ketentuan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
+                    <img src="{{ asset('dist_frontend/img/alert.gif') }}" alt="" class="me-3"
+                        style="width: 2rem">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
                         Ketentuan untuk upload
                     </h1>
@@ -168,14 +170,19 @@
                     <p class="fw-bold">Cara ambil link google drive untuk disematkan</p>
                     <ol>
                         <li>
-                            Pastikan untuk memberikan izin akses ke siapa saja yang memiliki
-                            link.
+                            <p> Pastikan untuk memberikan izin akses ke siapa saja yang memiliki
+                                link.</p>
+                            <img src="{{ asset('dist_frontend/img/1.png') }}" alt="" class="img-fluid w-75">
                         </li>
-                        <li>
-                            Buka file di googledirve, setelah itu pilih titik 3 di pojok
-                            kanan atas, pilih buka di jendela baru
+                        <li class="mt-3">
+                            <p>Buka file di googledirve, setelah itu pilih titik 3 di pojok
+                                kanan atas, pilih buka di jendela baru</p>
+                            <img src="{{ asset('dist_frontend/img/2.png') }}" alt="" class="img-fluid w-75">
                         </li>
-                        <li>Copy link di jendela baru itu, baru lakukan upload disini</li>
+                        <li class="mt-3">
+                            <p>Copy link di jendela baru itu, baru lakukan upload disini</p>
+                            <img src="{{ asset('dist_frontend/img/3.png') }}" alt="" class="img-fluid">
+                        </li>
                     </ol>
                 </div>
                 <div class="modal-footer">

@@ -24,17 +24,30 @@ use Cloudinary\Api\Exception\ApiError;
 
 class FrontPostController extends Controller
 {
-    public function show($name)
+    public function show(Request $request, $name)
     {
         $page = 'showPost';
         // Cari user berdasarkan 'name'
         $user = User::where('name', $name)->first();
 
         if ($user) {
-            // Jika user ditemukan, ambil semua post yang dimilikinya
-            $data = Post::where('user_id', $user->id)->latest()->paginate(8);
+            $query = Post::where('user_id', $user->id);
+
+            // Memproses pencarian jika parameter search_media disediakan
+            if (request()->has('search_media') && request()->filled('search_media')) {
+                $searchTerm = request('search_media');
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('body', 'like', '%' . $searchTerm . '%');
+                    // Sesuaikan dengan kolom-kolom lain yang ingin Anda cari
+                });
+            }
+
+            // Ambil data post sesuai dengan query yang sudah diinisialisasi
+            $data = $query->latest()->paginate(8);
+
             $show = User::where('name', $name)->first();
-            return view('frontend.Post.front-post_show', compact('data', 'show', 'page'));
+            return view('frontend.Post.front-post_show', compact('data', 'show', 'page', 'user'));
         } else {
             // Handle jika user tidak ditemukan
             echo "gagal";
@@ -57,14 +70,12 @@ class FrontPostController extends Controller
             'file' => 'mimes:png,jpg,jpeg,mp4,mkv,webm,mp3,m4a,eps,psd,ai,aep,aepx,prproj,aup3,sesx,als,zip,rar|file|max:10240',
             'file2' => 'file|max:10240',
             'body' => 'required',
-            // 'category_menu' => 'required',
             'url=' => [new EmbeddableUrl],
 
         ], [
             'body.required' => 'Deskripsi harus diisikan',
             'file.mimes' => 'File harus berupa gambar, video, audio',
             'title.required' => 'Judul tidak boleh kosong',
-            // 'category_menu.required' => 'Pilih Kategori yang valid',
         ]);
         $slug = SlugService::createSlug(Post::class, 'slug', $request->title);
         $store = new Post();
@@ -73,15 +84,11 @@ class FrontPostController extends Controller
         $store->slug = $slug;
         $store->body = $request->body;
         $store->category_id = $request->category_menu;
-        // dd($store);
-        // die;
-
 
         if ($request->file('file')) {
             $files = $request->file('file');
             $pilkat = $store->category_id;
             $ext = $files->getClientOriginalExtension();
-
             // Image
             if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
                 $ext = $request->file('file')->extension();
@@ -98,128 +105,13 @@ class FrontPostController extends Controller
                 $store->resolution = $resolution;
                 $store->file = $final;
             }
-
             // Video
             if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
-                // $ext = $request->file('file')->extension();
-                // $final = 'video' . time() . '.' . $ext;
-                // $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
-                // $store->file = $final;
-
-                //    thumbnail video
-                // $video = FFMpeg::fromDisk('video')->open($final);
-                // $thumbnail = 'thumb' . time() . '.jpg';
-                // $video->getFrameFromSeconds(2)
-                //     ->export()
-                //     ->accurate()
-                //     ->save('thumbnail/' . $thumbnail);
-
-                // $store->thumbnail = $thumbnail;
-                // end thumbnail video
-
-                // Konversi video
-                // $video2 = FFMpeg::fromDisk('video')->open($final);
-
-                // 720p
-                // $q720p = '720p' . time() . '.mp4';
-                // $video2->addFilter(function (VideoFilters $filters) {
-                //     $filters->resize(new \FFMpeg\Coordinate\Dimension(1280, 720));
-                // })
-                //     ->export()
-                //     ->toDisk('video')
-                //     ->inFormat(new X264)
-                //     ->save('720p/' . $q720p);
-                // $store->q720p = $q720p;
-                // end 720p
-
-                // 480p
-                // $q480p = '480p' . time() . '.mp4';
-                // $video2->addFilter(function (VideoFilters $filters) {
-                //     $filters->resize(new \FFMpeg\Coordinate\Dimension(640, 480));
-                // })
-                //     ->export()
-                //     ->toDisk('video')
-                //     ->inFormat(new X264)
-                //     ->save('480p/' . $q480p);
-                // $store->q480p = $q480p;
-                // end 480p
-
-                // 360p
-                // $q360p = '360p' . time() . '.mp4';
-                // $video2->addFilter(function (VideoFilters $filters) {
-                //     $filters->resize(new \FFMpeg\Coordinate\Dimension(640, 360));
-                // })
-                //     ->export()
-                //     ->toDisk('video')
-                //     ->inFormat(new X264)
-                //     ->save('360p/' . $q360p);
-                // $store->q360p = $q360p;
-                // end 360p
-                // end Konversi Video
-
-                $pathVideo = 'video';
-                $file = $request->file('file')->getClientOriginalName();
-                $fileName = pathinfo($file, PATHINFO_FILENAME);
-                $publicId = date('Y-m-d_His') . '_' . $fileName;
-                $cPublicId = $pathVideo . '/' . $publicId;
-
-                $uploadVideo = Cloudinary::uploadVideo(
-                    $request->file('file')->getRealPath(),
-                    [
-                        "public_id" => $publicId,
-                        "folder" => $pathVideo,
-                    ]
-                )->getSecurePath();
-
-                // Konversi video ke kualitas 720p, 480p, dan 360p
-                $path720p = 'video/720p';
-                $path480p = 'video/480p';
-                $path360p = 'video/360p';
-
-                // Transformasi untuk 720p
-                $upload720p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                    "public_id" => $publicId . '-720p',
-                    "folder" => $path720p,
-                    "transformation" => [
-                        'width' => 1280,
-                        'height' => 720,
-                    ]
-                ])->getSecurePath();
-
-                // Transformasi untuk 480p
-                $upload480p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                    "public_id" => $publicId . '-480p',
-                    "folder" => $path480p,
-                    "transformation" => [
-                        'width' => 854,
-                        'height' => 480
-                    ]
-                ])->getSecurePath();
-
-                // Transformasi untuk 360p
-                $upload360p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                    "public_id" => $publicId . '-360p',
-                    "folder" => $path360p,
-                    "transformation" => [
-                        'width' => 640,
-                        'height' => 360
-                    ]
-                ])->getSecurePath();
-
-                $cPublicId720 = $path720p . '/' . $publicId . '-720p';
-                $cPublicId480 = $path480p . '/' . $publicId . '-480p';
-                $cPublicId360 = $path360p . '/' . $publicId . '-360p';
-
-                $store->file = $uploadVideo;
-                $store->q720p = $upload720p;
-                $store->q480p = $upload480p;
-                $store->q360p = $upload360p;
-                $store->cPublicId = $cPublicId;
-                $store->cPublicId720 = $cPublicId720;
-                $store->cPublicId480 = $cPublicId480;
-                $store->cPublicId360 = $cPublicId360;
+                $ext = $request->file('file')->extension();
+                $final = 'video' . time() . '.' . $ext;
+                $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
+                $store->file = $final;
             }
-
             // audio
             if ($ext == 'mp3' || $ext == 'm4a') {
                 $ext = $request->file('file')->extension();
@@ -240,7 +132,6 @@ class FrontPostController extends Controller
                 $store->urlgd = $change_link;
             }
         }
-
         // file project
         if ($request->has('file2Link')) {
             if (strpos($request->file2Link, 'preview') !== false) {
@@ -255,8 +146,6 @@ class FrontPostController extends Controller
 
         // YouTube
         if ($request->linkyt != null) {
-            // dd('linkyt exists');
-
             $pilkat = 4;
             $store->category_id = 4;
             $store->url = $request->linkyt;
@@ -356,11 +245,6 @@ class FrontPostController extends Controller
             return redirect()->back()->with('error', 'Postingan tidak ditemukan.');
         }
 
-        $publicId = $delete->cPublicId;
-        $publicId720 = $delete->cPublicId720;
-        $publicId480 = $delete->cPublicId480;
-        $publicId360 = $delete->cPublicId360;
-
         $filePaths = [];
 
         if ($delete->file != '') {
@@ -374,18 +258,13 @@ class FrontPostController extends Controller
                 ]);
             } elseif (in_array($extension, ['mp4', 'avi', 'mov', 'aep', 'aepx', 'prproj'])) {
                 $filePaths = array_merge($filePaths, [
-                    // 'public/uploads/video/' . $delete->file,
+                    'public/uploads/video/' . $delete->file,
                     // 'public/uploads/video/thumbnail/' . $delete->thumbnail,
                     // 'public/uploads/video/720p/' . $delete->q720p,
                     // 'public/uploads/video/480p/' . $delete->q480p,
                     // 'public/uploads/video/360p/' . $delete->q360p,
                     'public/uploads/rawvideo/' . $delete->file_mentah,
                 ]);
-                // Hapus dari Cloudinary
-                Cloudinary::destroy($publicId, ['resource_type' => 'video']);
-                Cloudinary::destroy($publicId720, ['resource_type' => 'video']);
-                Cloudinary::destroy($publicId480, ['resource_type' => 'video']);
-                Cloudinary::destroy($publicId360, ['resource_type' => 'video']);
             } elseif (in_array($extension, ['mp3', 'm4a', 'wav', 'aup3', 'sesx', 'als'])) {
                 $filePaths = array_merge($filePaths, [
                     'public/uploads/audio/' . $delete->file,
@@ -513,69 +392,12 @@ class FrontPostController extends Controller
                         $update->resolution = $resolution;
                         $update->file = $final;
                     }
-                } elseif ($update->file == '') {
+                } elseif (file_exists(storage_path('app/public/uploads/video/' . $update->file == ''))) {
                     if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
-                        $pathVideo = 'video';
-                        $file = $request->file('file')->getClientOriginalName();
-                        $fileName = pathinfo($file, PATHINFO_FILENAME);
-                        $publicId = date('Y-m-d_His') . '_' . $fileName;
-                        $cPublicId = $pathVideo . '/' . $publicId;
-
-                        $uploadVideo = Cloudinary::uploadVideo(
-                            $request->file('file')->getRealPath(),
-                            [
-                                "public_id" => $publicId,
-                                "folder" => $pathVideo,
-                            ]
-                        )->getSecurePath();
-
-                        // Konversi video ke kualitas 720p, 480p, dan 360p
-                        $path720p = 'video/720p';
-                        $path480p = 'video/480p';
-                        $path360p = 'video/360p';
-
-                        // Transformasi untuk 720p
-                        $upload720p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                            "public_id" => $publicId . '-720p',
-                            "folder" => $path720p,
-                            "transformation" => [
-                                'width' => 1280,
-                                'height' => 720,
-                            ]
-                        ])->getSecurePath();
-
-                        // Transformasi untuk 480p
-                        $upload480p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                            "public_id" => $publicId . '-480p',
-                            "folder" => $path480p,
-                            "transformation" => [
-                                'width' => 854,
-                                'height' => 480
-                            ]
-                        ])->getSecurePath();
-
-                        // Transformasi untuk 360p
-                        $upload360p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                            "public_id" => $publicId . '-360p',
-                            "folder" => $path360p,
-                            "transformation" => [
-                                'width' => 640,
-                                'height' => 360
-                            ]
-                        ])->getSecurePath();
-
-                        $cPublicId720 = $path720p . '/' . $publicId . '-720p';
-                        $cPublicId480 = $path480p . '/' . $publicId . '-480p';
-                        $cPublicId360 = $path360p . '/' . $publicId . '-360p';
-
-                        $update->oriVideo = $uploadVideo;
-                        $update->q720p = $upload720p;
-                        $update->q480p = $upload480p;
-                        $update->q360p = $upload360p;
-                        $update->cPublicId = $cPublicId;
-                        $update->cPublicId720 = $cPublicId720;
-                        $update->cPublicId480 = $cPublicId480;
-                        $update->cPublicId360 = $cPublicId360;
+                        $ext = $request->file('file')->extension();
+                        $final = 'video' . time() . '.' . $ext;
+                        $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
+                        $update->file = $final;
                     }
                 } elseif (file_exists(storage_path('app/public/uploads/audio/' . $update->file == ''))) {
                     if ($ext == 'mp3' || $ext == 'm4a') {
@@ -604,79 +426,13 @@ class FrontPostController extends Controller
                         $update->resolution = $resolution;
                         $update->file = $final;
                     }
-                } elseif ($update->file) {
-                    $publicId = $update->cPublicId;
-                    $publicId720 = $update->cPublicId720;
-                    $publicId480 = $update->cPublicId480;
-                    $publicId360 = $update->cPublicId360;
-                    Cloudinary::destroy($publicId, ['resource_type' => 'video']);
-                    Cloudinary::destroy($publicId720, ['resource_type' => 'video']);
-                    Cloudinary::destroy($publicId480, ['resource_type' => 'video']);
-                    Cloudinary::destroy($publicId360, ['resource_type' => 'video']);
-
-                    if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm' || $ext == 'jpg') {
-                        $pathVideo = 'video';
-                        $pathThumbnail = 'video/thumbnail';
-                        $file = $request->file('file')->getClientOriginalName();
-                        $fileName = pathinfo($file, PATHINFO_FILENAME);
-                        $publicId = date('Y-m-d_His') . '_' . $fileName;
-                        $cPublicId = $pathVideo . '/' . $publicId;
-
-                        $uploadVideo = Cloudinary::uploadVideo(
-                            $request->file('file')->getRealPath(),
-                            [
-                                "public_id" => $publicId,
-                                "folder" => $pathVideo,
-                            ]
-                        )->getSecurePath();
-
-                        // Konversi video ke kualitas 720p, 480p, dan 360p
-                        $path720p = 'video/720p';
-                        $path480p = 'video/480p';
-                        $path360p = 'video/360p';
-
-                        // Transformasi untuk 720p
-                        $upload720p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                            "public_id" => $publicId . '-720p',
-                            "folder" => $path720p,
-                            "transformation" => [
-                                'width' => 1280,
-                                'height' => 720,
-                            ]
-                        ])->getSecurePath();
-
-                        // Transformasi untuk 480p
-                        $upload480p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                            "public_id" => $publicId . '-480p',
-                            "folder" => $path480p,
-                            "transformation" => [
-                                'width' => 854,
-                                'height' => 480
-                            ]
-                        ])->getSecurePath();
-
-                        // Transformasi untuk 360p
-                        $upload360p = Cloudinary::uploadVideo($request->file('file')->getRealPath(), [
-                            "public_id" => $publicId . '-360p',
-                            "folder" => $path360p,
-                            "transformation" => [
-                                'width' => 640,
-                                'height' => 360
-                            ]
-                        ])->getSecurePath();
-
-                        $cPublicId720 = $path720p . '/' . $publicId . '-720p';
-                        $cPublicId480 = $path480p . '/' . $publicId . '-480p';
-                        $cPublicId360 = $path360p . '/' . $publicId . '-360p';
-
-                        $update->file = $uploadVideo;
-                        $update->q720p = $upload720p;
-                        $update->q480p = $upload480p;
-                        $update->q360p = $upload360p;
-                        $update->cPublicId = $cPublicId;
-                        $update->cPublicId720 = $cPublicId720;
-                        $update->cPublicId480 = $cPublicId480;
-                        $update->cPublicId360 = $cPublicId360;
+                } elseif (file_exists(storage_path('app/public/uploads/video/' . $update->file))) {
+                    unlink(storage_path('app/public/uploads/video/' . $update->file));
+                    if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
+                        $ext = $request->file('file')->extension();
+                        $final = 'video' . time() . '.' . $ext;
+                        $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
+                        $update->file = $final;
                     }
                 } elseif (file_exists(storage_path('app/public/uploads/audio/' . $update->file))) {
                     unlink(storage_path('app/public/uploads/audio/' . $update->file));

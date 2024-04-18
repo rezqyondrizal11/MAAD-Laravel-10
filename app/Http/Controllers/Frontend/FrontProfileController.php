@@ -36,7 +36,6 @@ class FrontProfileController extends Controller
         $show = User::where('name', $name)->first();
 
         if ($show) {
-            // Jika user ditemukan, ambil semua post yang dimilikinya
             $post = Post::where('user_id', $show->id)
                 ->whereHas('rCategory', function ($query) {
                     $query->where('id', 4);
@@ -47,7 +46,6 @@ class FrontProfileController extends Controller
 
             return view('frontend.profile.profile_show', compact('post', 'show', 'page'));
         } else {
-            // Handle jika user tidak ditemukan
             echo "gagal";
         }
     }
@@ -57,7 +55,6 @@ class FrontProfileController extends Controller
         $show = User::where('name', $name)->first();
 
         if ($show) {
-            // Jika user ditemukan, ambil semua post yang dimilikinya
             $post = Post::where('user_id', $show->id)
                 ->whereHas('rCategory', function ($query) {
                     $query->where('id', 5);
@@ -68,7 +65,6 @@ class FrontProfileController extends Controller
 
             return view('frontend.profile.profile_show', compact('post', 'show', 'page'));
         } else {
-            // Handle jika user tidak ditemukan
             echo "gagal";
         }
     }

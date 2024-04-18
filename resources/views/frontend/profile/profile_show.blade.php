@@ -81,7 +81,7 @@
                                     <div class="row">
                                         @foreach ($post as $item)
                                             @php
-                                                $path_video = $item->file;
+                                                $path_video = asset('storage/uploads/video/' . $item->file);
                                                 $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
                                             @endphp
                                             @if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm')

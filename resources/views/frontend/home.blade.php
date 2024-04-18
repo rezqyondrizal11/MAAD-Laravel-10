@@ -80,11 +80,11 @@
                     {{-- Video --}}
                 @elseif (Request::path() == 'video')
                     @php
-                        $path_video =  $item->file;
+                        $path_video =  asset('storage/uploads/video/' . $item->file);
                         $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
                     @endphp
                     @if ($extvideo)
-                    <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
+                    <ataiv class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                         <div class="card-custom shadow rounded-3 mx-auto">
                                 <video class="" controls>
                                 @if ($extvideo == 'mp4')
@@ -106,7 +106,7 @@
                                     <a href="{{ route('detail', [$item->slug]) }}" class="card-button btn btn-sm warna_search btn-danger">Detail</a>
                                 </div>
                             </div>
-                    </div>
+                    </ataiv>
                     @elseif ($item->url)
                         <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
@@ -136,11 +136,6 @@
                             </div>
                     </div>
                     @endif
-
-                    {{-- @if (Request::path() == 'video/*')
-                        <div class="mt-4"></div>
-                        {{ $post->links() }}
-                    @endif --}}
 
                     {{-- Audio --}}
                 @elseif (Request::path() == 'audio')
@@ -208,7 +203,7 @@
                         $path_photo = asset('storage/uploads/photo/compress/' . $item->file);
                         $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
 
-                        $path_video = $item->file;
+                        $path_video = asset('storage/uploads/video/' . $item->file);
                         $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
 
                         $path_audio = asset('storage/uploads/audio/' . $item->file);

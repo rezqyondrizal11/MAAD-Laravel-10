@@ -366,6 +366,14 @@
         document.getElementById("updatePostBtn").style.display = "none";
     });
 </script>
+<script>
+    // Ketika tombol delete diklik
+    document.getElementById("btnDeleteConfirm").addEventListener("click", function(event) {
+        // Menampilkan tombol dengan spinner
+        document.getElementById("deletingBtn").style.display = "block";
+        document.getElementById("btnDeleteConfirm").style.display = "none";
+    });
+</script>
 {{-- end loading btn --}}
 
 {{-- button edit link --}}

@@ -22,24 +22,22 @@ class FrontHomeController extends Controller
 {
     public function index(Request $request)
     {
+        // echo phpinfo();
+        // die;
         $userLogin = Auth::user();
         if ($userLogin) {
             $user = User::where('id', $userLogin->id)->first();
             $today = Carbon::now();
             if ($user->premium_expiry < $today) {
                 $user->role = 'umum';
+                $user->premium_expiry = null;
                 $user->update();
             }
         }
 
-
-        // $post = Post::with('rUser')->get();
         $search = $request->input('search');
-        $perPage = 12;
-        $data = Post::latest()->take($perPage)->get();
         $reso = Post::query()->distinct()->select('resolution')->get();
         $extensions = ['png', 'jpg', 'jpeg', 'mp4', 'mkv', 'webm', 'mp3', 'm4a'];
-        // $post = Post::where('name', 'like', '%' . $search . '%')->latest()->with('rUser')->take(8)->paginate($perPage);
         $post = Post::where('name', 'like', '%' . $search . '%')
             ->where(function ($query) use ($extensions, $search) {
                 $query->where('file', 'like', '%' . $extensions[0])
@@ -155,10 +153,7 @@ class FrontHomeController extends Controller
     {
         $page = 'detail';
         $post = Post::where('slug', $slug)->first();
-        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get(); // Mengambil 2 posting secara acak
-        // $posts = Post::latest()->with('rUser')->paginate(12);
-        // dd($posts);
-        // die;
+        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->where('slug', '<>', $slug)->get();
         $like = Like::where('post_id', $post->id)->count();
         $url = url('detail/' . $post->slug);
         $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
@@ -166,38 +161,38 @@ class FrontHomeController extends Controller
         return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
     }
 
-    public function detail_720p($slug)
-    {
-        $page = '720p';
-        $post = Post::where('slug', $slug)->first();
-        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get();
-        $like = Like::where('post_id', $post->id)->count();
-        $url = url('detail/' . $post->id . '/' . $post->rUser->name);
-        $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
-        return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
-    }
+    // public function detail_720p($slug)
+    // {
+    //     $page = '720p';
+    //     $post = Post::where('slug', $slug)->first();
+    //     $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get();
+    //     $like = Like::where('post_id', $post->id)->count();
+    //     $url = url('detail/' . $post->id . '/' . $post->rUser->name);
+    //     $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
+    //     return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
+    // }
 
-    public function detail_480p($slug)
-    {
-        $page = '480p';
-        $post = Post::where('slug', $slug)->first();
-        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get();
-        $like = Like::where('post_id', $post->id)->count();
-        $url = url('detail/' . $post->id . '/' . $post->rUser->name);
-        $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
-        return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
-    }
+    // public function detail_480p($slug)
+    // {
+    //     $page = '480p';
+    //     $post = Post::where('slug', $slug)->first();
+    //     $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get();
+    //     $like = Like::where('post_id', $post->id)->count();
+    //     $url = url('detail/' . $post->id . '/' . $post->rUser->name);
+    //     $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
+    //     return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
+    // }
 
-    public function detail_360p($slug)
-    {
-        $page = '360p';
-        $post = Post::where('slug', $slug)->first();
-        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get();
-        $like = Like::where('post_id', $post->id)->count();
-        $url = url('detail/' . $post->id . '/' . $post->rUser->name);
-        $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
-        return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
-    }
+    // public function detail_360p($slug)
+    // {
+    //     $page = '360p';
+    //     $post = Post::where('slug', $slug)->first();
+    //     $posts = Post::inRandomOrder()->limit(8)->with('rUser')->get();
+    //     $like = Like::where('post_id', $post->id)->count();
+    //     $url = url('detail/' . $post->id . '/' . $post->rUser->name);
+    //     $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';
+    //     return view('frontend.detailhome', compact('post', 'posts', 'like', 'url', 'message', 'page'));
+    // }
 
 
     public function download($file)
@@ -227,12 +222,12 @@ class FrontHomeController extends Controller
         //     return response()->download($path_video_360p);
         // }
 
-        // $path_video = storage_path('app/public/uploads/video/' . $file);
-        // $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
-        // if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm') {
-        //     $path = storage_path('app/public/uploads/video/' . $file);
-        //     return response()->download($path);
-        // }
+        $path_video = storage_path('app/public/uploads/video/' . $file);
+        $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
+        if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm') {
+            $path = storage_path('app/public/uploads/video/' . $file);
+            return response()->download($path);
+        }
 
         $path_audio = storage_path('app/public/uploads/audio/' . $file);
         $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
@@ -374,7 +369,6 @@ class FrontHomeController extends Controller
 
         return $response;
     }
-
 
     public function linkUser($slug)
     {

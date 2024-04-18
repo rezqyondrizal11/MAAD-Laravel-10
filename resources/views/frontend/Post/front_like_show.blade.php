@@ -17,7 +17,7 @@
                                 $path_photo = asset('storage/uploads/photo/compress/' . $item->file);
                                 $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
 
-                                $path_video = $item->file;
+                                $path_video = asset('storage/uploads/video/' . $item->file);
                                 $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
 
                                 $path_audio = asset('storage/uploads/audio/' . $item->file);
