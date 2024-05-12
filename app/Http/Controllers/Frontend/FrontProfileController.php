@@ -107,22 +107,22 @@ class FrontProfileController extends Controller
                 $ext = $file->getClientOriginalExtension();
 
                 if ($update->foto_profil == '') {
-                    if (storage_path('app/public/uploads/photo/profil')) {
+                    if (public_path('uploads/photo/profil')) {
                         if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
                             $ext = $request->file('foto_profil')->extension();
                             $final = 'profil' . time() . '.' . $ext;
 
-                            $request->file('foto_profil')->move(storage_path('app/public/uploads/photo/profil/'), $final);
+                            $request->file('foto_profil')->move(public_path('uploads/photo/profil/'), $final);
                             $update->foto_profil = $final;
                         }
                     }
                 } elseif ($update->foto_profil) {
-                    unlink(storage_path('app/public/uploads/photo/profil/' . $update->foto_profil));
+                    unlink(public_path('uploads/photo/profil/' . $update->foto_profil));
                     if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
                         $ext = $request->file('foto_profil')->extension();
                         $final = 'profil' . time() . '.' . $ext;
 
-                        $request->file('foto_profil')->move(storage_path('app/public/uploads/photo/profil'), $final);
+                        $request->file('foto_profil')->move(public_path('uploads/photo/profil'), $final);
                         $update->foto_profil = $final;
                     }
                 }

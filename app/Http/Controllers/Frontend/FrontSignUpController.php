@@ -23,7 +23,11 @@ class FrontSignUpController extends Controller
         $store->token = $token;
         $request->validate([
             'name' => 'required|unique:users,name',
-            'email' => 'required|email|unique:users,email',
+            'email' => ['required', 'email', 'unique:users,email', function ($attribute, $value, $fail) {
+                if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    $fail('The ' . $attribute . ' must be a valid email address.');
+                }
+            }],
             'hp' => 'required',
             'nim' => 'required|unique:users,nim',
             'gender' => 'required',

@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Cloudinary\Utils;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 
 class FrontHomeController extends Controller
@@ -34,6 +36,10 @@ class FrontHomeController extends Controller
                 $user->update();
             }
         }
+
+        // $response = Http::get('http://127.0.0.1:8000/api/user/index');
+
+        // $post = $response->json();
 
         $search = $request->input('search');
         $reso = Post::query()->distinct()->select('resolution')->get();
@@ -62,23 +68,20 @@ class FrontHomeController extends Controller
 
         $post = Post::whereHas('rCategory', function ($query) {
             $query->where('id', 3);
-        })
-            ->where(function ($query) use ($search, $extensions) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere(function ($subquery) use ($search, $extensions) {
-                        $subquery->where('file', 'like', '%' . $extensions[0])
-                            ->orWhere('file', 'like', '%' . $extensions[1])
-                            ->orWhere('file', 'like', '%' . $extensions[2]);
-                    })
-                    ->orWhere('url', 'like', '%' . $search . '%')
-                    ->orWhere('urlgd', 'like', '%' . $search . '%');
-            })
-            ->latest()
+        })->where(function ($query) use ($search, $extensions) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere(function ($subquery) use ($search, $extensions) {
+                    $subquery->where('file', 'like', '%' . $extensions[0])
+                        ->orWhere('file', 'like', '%' . $extensions[1])
+                        ->orWhere('file', 'like', '%' . $extensions[2]);
+                })
+                ->orWhere('url', 'like', '%' . $search . '%')
+                ->orWhere('urlgd', 'like', '%' . $search . '%');
+        })->latest()
             ->with('rUser')
             ->paginate(12);
 
         $reso = Post::query()->distinct()->select('resolution')->get();
-
         return view('frontend.home', compact('post', 'reso'));
     }
 
@@ -197,72 +200,41 @@ class FrontHomeController extends Controller
 
     public function download($file)
     {
-        $path_photo = storage_path('app/public/uploads/photo/' . $file);
+        $path_photo = public_path('uploads/photo/' . $file);
         $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
         if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg') {
-            $path = storage_path('app/public/uploads/photo/' . $file);
-            return response()->download($path);
+            $path = public_path('uploads/photo/' . $file);
+
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
         }
 
-        // $path_video_720p = storage_path('app/public/uploads/video/720p/' . $file);
-        // $extvideo720p = pathinfo($path_video_720p, PATHINFO_EXTENSION);
-        // if ($extvideo720p == 'mp4' && file_exists($path_video_720p)) {
-        //     return response()->download($path_video_720p);
-        // }
-
-        // $path_video_480p = storage_path('app/public/uploads/video/480p/' . $file);
-        // $extvideo480p = pathinfo($path_video_480p, PATHINFO_EXTENSION);
-        // if ($extvideo480p == 'mp4' && file_exists($path_video_480p)) {
-        //     return response()->download($path_video_480p);
-        // }
-
-        // $path_video_360p = storage_path('app/public/uploads/video/360p/' . $file);
-        // $extvideo360p = pathinfo($path_video_360p, PATHINFO_EXTENSION);
-        // if ($extvideo360p == 'mp4' && file_exists($path_video_360p)) {
-        //     return response()->download($path_video_360p);
-        // }
-
-        $path_video = storage_path('app/public/uploads/video/' . $file);
+        $path_video = public_path('uploads/video/' . $file);
         $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
         if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm') {
-            $path = storage_path('app/public/uploads/video/' . $file);
-            return response()->download($path);
+            $path = public_path('uploads/video/' . $file);
+
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
         }
 
-        $path_audio = storage_path('app/public/uploads/audio/' . $file);
+        $path_audio = public_path('uploads/audio/' . $file);
         $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
         if ($extaudio == 'mp3' || $extaudio == 'm4a') {
-            $path = storage_path('app/public/uploads/audio/' . $file);
-            return response()->download($path);
-        }
+            $path = public_path('uploads/audio/' . $file);
 
-        $path_raw_photo = storage_path('app/public/uploads/rawphoto/' . $file);
-        $extrawphoto = pathinfo($path_raw_photo, PATHINFO_EXTENSION);
-        if ($extrawphoto == 'eps' || $extrawphoto == 'psd' || $extrawphoto == 'ai' || $extrawphoto == 'cdr') {
-            $path = storage_path('app/public/uploads/rawphoto/' . $file);
-            return response()->download($path);
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
         }
-
-        $path_raw_video = storage_path('app/public/uploads/rawvideo/' . $file);
-        $extrawvideo = pathinfo($path_raw_video, PATHINFO_EXTENSION);
-        if ($extrawvideo == 'aep' || $extrawvideo == 'aepx' || $extrawvideo == 'prproj') {
-            $path = storage_path('app/public/uploads/rawvideo/' . $file);
-            return response()->download($path);
-        }
-
-        if (($extrawphoto == 'zip' || $extrawphoto == 'rar') && file_exists($path_raw_photo)) {
-            return response()->download($path_raw_photo);
-        }
-
-        if (($extrawvideo == 'zip' || $extrawvideo == 'rar') && file_exists($path_raw_video)) {
-            return response()->download($path_raw_video);
-        }
-        $path_raw_audio = storage_path('app/public/uploads/rawaudio/' . $file);
-        $extrawaudio = pathinfo($path_raw_audio, PATHINFO_EXTENSION);
-        if (($extrawaudio == 'zip' || $extrawaudio == 'rar') && file_exists($path_raw_audio)) {
-            return response()->download($path_raw_audio);
-        }
-
 
         // $publicId720 = $file->cPublicId720;
         // $publicId480 = $file->cPublicId480;
@@ -312,6 +284,60 @@ class FrontHomeController extends Controller
         //         return response()->json(['error' => 'Video not found'], 404);
         //     }
         // }
+    }
+
+    public function downloadRaw($file)
+    {
+        $path_raw_photo = public_path('uploads/rawphoto/' . $file);
+        $extrawphoto = pathinfo($path_raw_photo, PATHINFO_EXTENSION);
+        if ($extrawphoto == 'eps' || $extrawphoto == 'psd' || $extrawphoto == 'ai' || $extrawphoto == 'cdr') {
+            $path = $path_raw_photo;
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
+        }
+
+        $path_raw_video = public_path('uploads/rawvideo/' . $file);
+        $extrawvideo = pathinfo($path_raw_video, PATHINFO_EXTENSION);
+        if ($extrawvideo == 'aep' || $extrawvideo == 'aepx' || $extrawvideo == 'prproj') {
+            $path = $path_raw_video;
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
+        }
+
+        if (($extrawphoto == 'zip' || $extrawphoto == 'rar') && file_exists($path_raw_photo)) {
+            $path = public_path('uploads/rawphoto/' . $file);
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
+        }
+
+        if (($extrawvideo == 'zip' || $extrawvideo == 'rar') && file_exists($path_raw_video)) {
+            $path = public_path('uploads/rawvideo/' . $file);
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
+        }
+
+        $path_raw_audio = public_path('uploads/rawaudio/' . $file);
+        $extrawaudio = pathinfo($path_raw_audio, PATHINFO_EXTENSION);
+        if (($extrawaudio == 'zip' || $extrawaudio == 'rar') && file_exists($path_raw_audio)) {
+            $path = public_path('uploads/rawaudio/' . $file);
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            $type = mime_content_type($path);
+            return response()->download($path, $file, ['Content-Type' => $type]);
+        }
     }
 
     public function downloadVideo($filename, $quality = 'original')
@@ -380,6 +406,7 @@ class FrontHomeController extends Controller
             $message = 'klik link <a href="' . $url . '">ini</a>';
             return view('frontend.detailhome', compact('url', 'post', 'like', 'message'));
         } else {
+            echo "nothing";
         }
     }
 }

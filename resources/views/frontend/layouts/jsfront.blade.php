@@ -7,32 +7,6 @@
 
 <script src="{{ asset('dist_frontend/js/iziToast.min.js') }}"></script>
 
-{{-- download button --}}
-<script>
-    $(document).ready(function() {
-        $('.download-btn').click(function(e) {
-            e.preventDefault(); // membatalkan tindakan default tombol download
-
-            // URL untuk mendownload file
-            var file_url = $(this).attr('href');
-
-            // membuat elemen link untuk proses download
-            var link = document.createElement("a");
-            link.href = file_url;
-            link.download = true;
-
-            // mengklik elemen link untuk memulai proses download
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // menampilkan modal setelah proses download selesai
-            $('#exampleModal').modal('show');
-        });
-    });
-</script>
-{{-- end download button --}}
-
 {{-- copy --}}
 <script>
     function copyText() {

@@ -42,4 +42,9 @@ class Post extends Model
             return $embed->html(['width' => 200]);
         }
     }
+
+    public function rSubcategory()
+    {
+        return $this->belongsToMany(SubCategory::class, 'sub_category_posts', 'post_id', 'sub_category_id');
+    }
 }

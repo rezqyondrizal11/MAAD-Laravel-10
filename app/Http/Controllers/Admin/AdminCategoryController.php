@@ -11,7 +11,7 @@ class AdminCategoryController extends Controller
 {
     public function show()
     {
-        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin') {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin' || Auth::guard('admin')->user()->role == 'Dosen') {
             $page = 'category';
             $categories = Category::get();
             return view('admin.category.category_show', compact('categories', 'page'));
@@ -22,7 +22,7 @@ class AdminCategoryController extends Controller
 
     public function create()
     {
-        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin') {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin' || Auth::guard('admin')->user()->role == 'Dosen') {
             $page = 'category';
             return view('admin.category.category_create', compact('page'));
         } else {
@@ -37,6 +37,12 @@ class AdminCategoryController extends Controller
         ]);
 
         $category_name = $request->category_name;
+
+        $existingCategory = Category::where('name', $category_name)->first();
+
+        if ($existingCategory) {
+            return redirect()->back()->withErrors(['category_name' => 'Kategori dengan nama ini sudah ada!']);
+        }
 
         $category_id = null;
         switch ($category_name) {
@@ -64,7 +70,7 @@ class AdminCategoryController extends Controller
 
     public function edit($name)
     {
-        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin') {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->role == 'Admin' || Auth::guard('admin')->user()->role == 'Dosen') {
             $page = 'category';
             $edit = Category::where('name', $name)->first();
             return view('admin.category.category_edit', compact('edit', 'page'));
@@ -79,12 +85,21 @@ class AdminCategoryController extends Controller
             'category_name' => 'required',
         ]);
 
+        // Memeriksa apakah ada kategori dengan nama yang sama
+        $existingCategory = Category::where('name', $request->category_name)->first();
+
+        if ($existingCategory && $existingCategory->id !== $name) {
+            return redirect()->back()->withErrors(['category_name' => 'Kategori dengan nama ini sudah ada!']);
+        }
+
         $category_update = Category::where('name', $name)->first();
         $category_update->name = $request->category_name;
         $category_update->show_on_menu = $request->show_on_menu;
         $category_update->update();
+
         return redirect()->route('admin_category_show');
     }
+
 
     public function delete($name)
     {

@@ -32,7 +32,7 @@ return new class extends Migration
             // $table->string('q720p')->nullable();
             // $table->string('q480p')->nullable();
             // $table->string('q360p')->nullable();
-            $table->string('body');
+            $table->text('body');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });

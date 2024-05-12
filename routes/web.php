@@ -18,7 +18,9 @@ use App\Http\Controllers\Frontend\FrontPremiumController;
 use App\Http\Controllers\Frontend\FrontSignUpController;
 use App\Http\Controllers\Frontend\FrontProfileController;
 use App\Http\Controllers\Frontend\LikeController;
-use App\Models\User;
+use Illuminate\Support\Facades\File;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,12 +72,12 @@ Route::get('admin/make-premium/{name}', [AdminUserController::class, 'makepremiu
 // end admin make premium
 
 //admin sub category (tidak dipakai)
-// Route::get('admin/sub-category/show', [AdminSubCategoryController::class, 'show'])->name('admin_subCategory_show')->middleware('admin:admin');
-// Route::get('admin/sub-category/create', [AdminSubCategoryController::class, 'create'])->name('admin_subCategory_create')->middleware('admin:admin');
-// Route::post('admin/sub-category/store', [AdminSubCategoryController::class, 'store'])->name('admin_subCategory_store')->middleware('admin:admin');
-// Route::get('admin/sub-category/edit/{id}', [AdminSubCategoryController::class, 'edit'])->name('admin_subCategory_edit')->middleware('admin:admin');
-// Route::post('admin/sub-category/update/{id}', [AdminSubCategoryController::class, 'update'])->name('admin_subCategory_update')->middleware('admin:admin');
-// Route::get('admin/sub-category/delete/{id}', [AdminSubCategoryController::class, 'delete'])->name('admin_subCategory_delete')->middleware('admin:admin');
+Route::get('admin/sub-category/show', [AdminSubCategoryController::class, 'show'])->name('admin_subCategory_show')->middleware('admin:admin');
+Route::get('admin/sub-category/create', [AdminSubCategoryController::class, 'create'])->name('admin_subCategory_create')->middleware('admin:admin');
+Route::post('admin/sub-category/store', [AdminSubCategoryController::class, 'store'])->name('admin_subCategory_store')->middleware('admin:admin');
+Route::get('admin/sub-category/edit/{id}', [AdminSubCategoryController::class, 'edit'])->name('admin_subCategory_edit')->middleware('admin:admin');
+Route::post('admin/sub-category/update/{id}', [AdminSubCategoryController::class, 'update'])->name('admin_subCategory_update')->middleware('admin:admin');
+Route::get('admin/sub-category/delete/{id}', [AdminSubCategoryController::class, 'delete'])->name('admin_subCategory_delete')->middleware('admin:admin');
 //end admin sub category
 
 //admin users
@@ -124,6 +126,7 @@ Route::get('/detail/720p/{slug}', [FrontHomeController::class, 'detail_720p'])->
 Route::get('/detail/480p/{slug}', [FrontHomeController::class, 'detail_480p'])->name('480p');
 Route::get('/detail/360p/{slug}', [FrontHomeController::class, 'detail_360p'])->name('360p');
 Route::get('/download/{file}', [FrontHomeController::class, 'download'])->name('download')->middleware('auth');
+Route::get('/download/raw/{file}', [FrontHomeController::class, 'downloadRaw'])->name('download-raw')->middleware('auth');
 Route::get('/download-video/{filename}/{quality?}', [FrontHomeController::class, 'downloadVideo'])->name('download-video')->middleware('auth');
 Route::get('/link/{slug}', [FrontHomeController::class, 'linkuser'])->name('linkuser')->middleware('auth');
 // end Frontend
@@ -148,7 +151,7 @@ Route::get('signup/verification/{token}/{email}', [FrontSignUpController::class,
 
 //front login
 Route::post('user/login/submit', [FrontLoginControler::class, 'login_submit'])->name('user_login_submit');
-Route::get('user/logout', [FrontLoginControler::class, 'logout'])->name('user_logout');
+Route::post('user/logout', [FrontLoginControler::class, 'logout'])->name('user_logout');
 Route::get('user/forget', [FrontLoginControler::class, 'forget'])->name('user_forget');
 Route::get('user/reset-password/{token}/{email}', [FrontLoginControler::class, 'reset_password'])->name('user_reset_password');
 Route::post('user/forget/submit', [FrontLoginControler::class, 'forget_submit'])->name('user_forget_submit');
@@ -178,23 +181,47 @@ Route::get('/user/invoice/{id}', [FrontPremiumController::class, 'invoice'])->na
 // Route::get('/user/premium/hp', [FrontPremiumController::class, 'noHp'])->name('noHp')->middleware('auth');
 // end akun premium
 
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/symlink', function () {
-    try {
-        // Hapus symlink jika sudah ada
-        $link = public_path('storage');
-        if (file_exists($link)) {
-            unlink($link);
-            echo "Previous symlink removed. ";
-        }
-
-        // Buat symlink baru
-        symlink('../storage/app/public', $link);
-        echo "New symlink created.";
-    } catch (\Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
+    File::link(
+        storage_path('app/public'),
+        public_path('storage')
+    );
+    return 'Shortcut folder storage telah dibuat di dalam folder public.';
 });
+
+
+Route::get('files/{folder}/{filename}', function ($folder, $filename) {
+
+    // if ($folder === 'photo') {
+    //     $path = storage_path('app/public/uploads/' . $folder . '/compress' . '/' . $filename);
+    // } else {
+    $path = storage_path('app/public/uploads/' . $folder . '/' . $filename);
+    // }
+
+    if (!file_exists($path)) {
+        abort(500);
+    }
+
+    $file = file_get_contents($path);
+    $type = mime_content_type($path);
+
+    return response($file)->header('Content-Type', $type);
+})->name('show-file');
+
+Route::get('profile/{folder}/{filename}', function ($folder, $filename) {
+
+    // if ($folder === 'photo') {
+    //     $path = storage_path('app/public/uploads/' . $folder . '/compress' . '/' . $filename);
+    // } else {
+    $path = storage_path('app/public/uploads/photo/' . $folder . '/' . $filename);
+    // }
+
+    if (!file_exists($path)) {
+        abort(500);
+    }
+
+    $file = file_get_contents($path);
+    $type = mime_content_type($path);
+
+    return response($file)->header('Content-Type', $type);
+})->name('show-profile');

@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('sub_categories', function (Blueprint $table) {
             $table->id();
-            $table->integer('category_id');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade')->nullable();
             $table->string('sub_category_name');
-            $table->string('sub_category_order');
-            $table->string('show_on_menu');
+            $table->string('sub_category_order')->nullable();
+            $table->string('show_on_menu')->nullable();
             $table->timestamps();
         });
     }

@@ -1,5 +1,9 @@
 <!-- Awal Banner -->
 <div class="container-fluid banner">
+    <video autoplay muted loop id="bg-video">
+        <source src="{{ asset('dist_frontend/img/shenhe-genshin-impact.1920x1080.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-5">
             <a class="navbar-brand" href="{{ route('home') }}"><img src="{{ asset('dist_frontend/img/CODIAS.png') }}"
@@ -39,9 +43,15 @@
                                                 Unlock Premium</a></li>
                                     @else
                                     @endif
-                                    <li><a class="dropdown-item" href="{{ route('user_logout') }}"><i
-                                                class="bi bi-box-arrow-left"></i>
-                                            Logout</a></li>
+                                    <li>
+                                        <form action="{{ route('user_logout') }}" method="post">
+                                            @csrf
+                                            @method('POST')
+                                            <button type="submit" class="dropdown-item"><i
+                                                    class="bi bi-box-arrow-left"></i>
+                                                Logout</button>
+                                        </form>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -167,64 +177,15 @@
             </div>
         </div>
     </nav>
-    {{--
-    <div class="row pt-3">
-        <div class="col col-12 col-md-6 col-lg-6">
-            <img src="{{ asset('dist_frontend/img/UNP Asset.png') }}" alt="" width="200px">
-        </div>
-
-        <div class="col col-12 col-md-6 col-lg-6 d-flex justify-content-end">
-            @auth
-                <div class="dropdown">
-                    <button class="btn btn-light btnwhite dropdown-toggle rounded-pill mx-3 blue1" type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"></i>
-                        {{ Auth::guard()->user()->name }}
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ route('post_create', [Auth::guard()->user()->id, Auth::guard()->user()->name]) }}"
-                                class="dropdown-item"><i class="bi bi-upload"></i>
-                                Unggah</a></li>
-                        <li><a href="{{ route('post_show', [Auth::guard()->user()->id, Auth::guard()->user()->name]) }}"
-                                class="dropdown-item"><i class="bi bi-file-earmark-image"></i>
-                                My Media</a></li>
-                        <li><a class="dropdown-item" href="{{ route('profile_edit', Auth::guard()->user()->id) }}"><i
-                                    class="bi bi-file-text"></i>
-                                My Profile</a></li>
-                        <li><a class="dropdown-item" href="{{ route('user_logout') }}"><i class="bi bi-box-arrow-left"></i>
-                                Logout</a></li>
-                    </ul>
-                </div>
-            @else
-                <a href="#" class="btn btn-light btn-block btnwhite blue1 rounded-pill px-lg-4" data-bs-toggle="modal"
-                    data-bs-target="#order"><i class="bi bi-box-arrow-in-right"></i> Log in</a>
-                <a href="{{ route('user_signup') }}"
-                    class="btn btn btn-primary btnblue1 white rounded-pill px-lg-4 ms-2"><i class="bi bi-plus-square"></i>
-                    Sign up</a>
-                <a href="{{ route('post_create', ['ads', 'asd']) }}" class="btn btn-success rounded-pill px-4 mx-2"
-                    onclick="return alert('Anda tidak login')"><i class="bi bi-upload"></i> Unggah</a>
-            @endauth --}}
-    {{-- </div>
-</div> --}}
 
     <div class="row justify-content-center pt-lg-5">
         @if (Request::path() == 'photo')
-            <div class="col col-12 col-lg-8 d-flex justify-content-center my-5 px-5" data-aos="zoom-in-down"
+            <div class="col col-12 col-lg-8 d-flex justify-content-center px-5 banY" data-aos="zoom-in-down"
                 data-aos-duration="1200">
                 <p class="display-6 fw-bold mt-5 text-center text-light banner-text">STOCK PHOTO GRATIS DARI ORANG
                     BERBAKAT UNIVERSITAS NEGERI PADANG </p>
             </div>
-            <div class="col col-12 col-lg-6 text-center">
-                {{-- @if (Request::path() == 'photo/{ukuran}')
-                    <form action="{{ route('photo/{ukuran}') }}" method="GET">
-                        <div class="input-group">
-                            <input type="text" class="form-control py-3 rounded-start-pill shadow"
-                                placeholder="Search.." name="search_photo" value="{{ request('search_photo') }}">
-                            <button class="btn warna_search rounded-end-pill" type="submit"><i
-                                    class="bi bi-search text-light"></i></button>
-                        </div>
-                    </form>
-                @endif --}}
+            <div class="col col-12 col-lg-6 text-center mt-5">
                 <form action="{{ route('photo') }}" method="GET">
                     <div class="input-group">
                         <input type="text" class="form-control form-control-md shadow" placeholder="Search.."
@@ -235,12 +196,12 @@
                 </form>
             </div>
         @elseif (Request::path() == 'video')
-            <div class="col col-12 col-lg-12 d-flex justify-content-center my-5" data-aos="zoom-in-down"
+            <div class="col col-12 col-lg-8 d-flex justify-content-center px-5 banY" data-aos="zoom-in-down"
                 data-aos-duration="1200">
                 <p class="display-6 fw-bold mt-5 text-center text-light banner-text">REKAMAN & STOCK VIDEO GRATIS DARI
                     ORANG BERBAKAT </p>
             </div>
-            <div class="col col-12 col-lg-6 text-center mt-3">
+            <div class="col col-12 col-lg-6 text-center mt-5">
                 <form action="{{ route('video') }}" method="GET">
                     <div class="input-group">
                         <input type="text" class="form-control form-control-md shadow" placeholder="Search.."
@@ -251,12 +212,12 @@
                 </form>
             </div>
         @elseif (Request::path() == 'audio')
-            <div class="col col-12 col-lg-12 d-flex justify-content-center my-5" data-aos="zoom-in-down"
+            <div class="col col-12 col-lg-8 d-flex justify-content-center px-5 banY" data-aos="zoom-in-down"
                 data-aos-duration="1200">
                 <p class="display-6 fw-bold mt-5 text-center text-light banner-text">REKOMENDASI MUSIK GRATIS DARI
                     ORANG BERBAKAT </p>
             </div>
-            <div class="col col-12 col-lg-6 text-center mt-3">
+            <div class="col col-12 col-lg-6 text-center mt-5">
                 <form action="{{ route('audio') }}" method="GET">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control form-control-md" placeholder="Search.."
@@ -267,12 +228,12 @@
                 </form>
             </div>
         @else
-            <div class="col col-12 col-lg-7 d-flex justify-content-center my-5" data-aos="zoom-in-down"
+            <div class="col col-12 col-lg-7 d-flex justify-content-center banY" data-aos="zoom-in-down"
                 data-aos-duration="1200">
                 <p class="display-6 fw-bold mt-5 text-center text-light banner-text">TEMUKAN HAL YANG MENAKJUBKAN DI
                     SEKITAR UNIVERSITAS NEGERI PADANG</p>
             </div>
-            <div class="col col-12 col-lg-6 text-center mt-3">
+            <div class="col col-12 col-lg-6 text-center mt-5">
                 <form action="{{ route('home') }}" method="GET">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control form-control-md" placeholder="Search.."
@@ -307,6 +268,7 @@
                 <div class="container">
                     <form action="{{ route('user_login_submit') }}" method="post">
                         @csrf
+                        @method('POST')
                         <div class="py-3">
                             <label class="form-label">Email address</label>
                             <input type="email" class="form-control form-control-sm" name='email' id="email"

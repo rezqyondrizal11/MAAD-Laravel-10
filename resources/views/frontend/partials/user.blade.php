@@ -21,12 +21,12 @@
     </div>
     <div class="text-center">
         @php
-            $path_photo = asset('storage/uploads/photo/profil/' . $show->foto_profil);
-            $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
+            $ext = pathinfo($show->foto_profil, PATHINFO_EXTENSION);
         @endphp
-        @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')
+        @if (in_array($ext, ['jpg', 'png', 'jpeg']))
             <div class="foto-profil rounded-pill shadow">
-                <img src="{{ asset($path_photo) }}" alt="" class="img-fluid rounded-pill">
+                <img src="{{ asset('uploads/photo/profil/' . $show->foto_profil) }}" alt=""
+                    class="img-fluid rounded-pill">
             </div>
         @elseif ($extphoto == '')
             <div class="pt-5">

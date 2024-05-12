@@ -26,14 +26,7 @@
                         </div>
 
                         @php
-                            $path_photo = asset('storage/uploads/photo/' . $post->file);
-                            $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
-
-                            $path_video = asset('storage/uploads/video/' . $post->file);
-                            $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
-
-                            $path_audio = asset('storage/uploads/audio/' . $post->file);
-                            $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
+                            $ext = pathinfo($post->file, PATHINFO_EXTENSION);
 
                             $path_raw_photo = asset('storage/uploads/rawphoto/' . $post->file_mentah);
                             $extrawphoto = pathinfo($path_raw_photo, PATHINFO_EXTENSION);
@@ -52,11 +45,11 @@
                                 <label for="exampleFormControlInput1" class="form-label">File Sebelumnya</label>
                                 <div class="row">
                                     {{-- Photo --}}
-                                    @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')
+                                    @if (in_array($ext, ['jpg', 'png', 'jpeg']))
                                         <div class="col col-12 col-lg-8">
                                             <div class="card shadow">
                                                 <div class="card-body text-center" style="max-height:52rem;">
-                                                    <img src="{{ asset($path_photo) }}"
+                                                    <img src="{{ asset('uploads/photo/' . $post->file) }}"
                                                         class="img-fluid rounded-start shadow" alt="..."
                                                         style="max-height: 50rem">
                                                 </div>
@@ -66,18 +59,21 @@
                                     {{-- end Photo --}}
 
                                     {{-- Video --}}
-                                    @if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm')
+                                    @if (in_array($ext, ['mp4', 'mkv', 'webm']))
                                         <div class="col col-12 col-lg-8">
                                             <div class="card shadow">
                                                 <video class="object-fit-contain" controls style="max-height:52rem;">
-                                                    @if ($extvideo == 'mp4')
-                                                        <source src="{{ $path_video }}" alt="" type="video/mp4">
+                                                    @if ($ext == 'mp4')
+                                                        <source src="{{ asset('uploads/video/' . $post->file) }}"
+                                                            alt="" type="video/mp4">
                                                     @endif
-                                                    @if ($extvideo == 'mkv')
-                                                        <source src="{{ $path_video }}" alt="" type="video/mkv">
+                                                    @if ($ext == 'mkv')
+                                                        <source src="{{ asset('uploads/video/' . $post->file) }}"
+                                                            alt="" type="video/mkv">
                                                     @endif
-                                                    @if ($extvideo == 'webm')
-                                                        <source src="{{ $path_video }}" alt="" type="video/webm">
+                                                    @if ($ext == 'webm')
+                                                        <source src="{{ asset('uploads/video/' . $post->file) }}"
+                                                            alt="" type="video/webm">
                                                     @endif
                                                 </video>
                                             </div>
@@ -86,18 +82,18 @@
                                     {{-- end Video --}}
 
                                     {{-- Audio --}}
-                                    @if ($extaudio == 'mp3' || $extaudio == 'm4a')
+                                    @if (in_array($ext, ['mp3', 'm4a']))
                                         <div class="col col-12 col-lg-8">
                                             <div class="card shadow">
                                                 <div class="card-body text-center">
                                                     <audio controls>
-                                                        @if ($extaudio == 'mp3')
-                                                            <source src="{{ $path_audio }}" alt=""
-                                                                type="audio/mp3">
+                                                        @if ($ext == 'mp3')
+                                                            <source src="{{ asset('uploads/audio/' . $post->file) }}"
+                                                                alt="" type="audio/mp3">
                                                         @endif
-                                                        @if ($extaudio == 'm4a')
-                                                            <source src="{{ $path_audio }}" alt=""
-                                                                type="audio/m4a">
+                                                        @if ($ext == 'm4a')
+                                                            <source src="{{ asset('uploads/audio/' . $post->file) }}"
+                                                                alt="" type="audio/m4a">
                                                         @endif
                                                     </audio>
                                                 </div>
@@ -122,13 +118,13 @@
                                 <div class="mb-4">
                                     <label for="" class="form-label">File project sebelumnya</label><br>
                                     <div class="row">
-                                        <div class="col col-12 col-lg-2">
+                                        <div class="col col-12 col-lg-3">
                                             @if ($extrawphoto || $extrawvideo || $extrawaudio)
-                                                <div class="card shadow rounded-3">
+                                                <div class="card shadow rounded-5">
                                                     <div class="p-2 text-center">
-                                                        <span class="display-1 text-warning"><i
-                                                                class="bi bi-file-zip-fill"></i></span><br>
-                                                        <span class="small">{{ $edit->file_mentah }}</span>
+                                                        <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
+                                                            alt="" class="img-fluid"><br>
+                                                        <span class="small text-secondary">{{ $edit->file_mentah }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -192,7 +188,9 @@
                         @elseif ($edit->url)
                             <div class="mb-4">
                                 <label for="" class="form-label">Video youtube sebelumnya</label>
-                                <x-embed url="{{ $edit->url }}" aspect-ratio="16:9" />
+                                <div class="card">
+                                    <x-embed url="{{ $edit->url }}" aspect-ratio="16:9" />
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label for="" class="form-label">Ganti link youtube</label>
@@ -204,13 +202,13 @@
                                 <div class="mb-4">
                                     <label for="" class="form-label">File project sebelumnya</label><br>
                                     <div class="row">
-                                        <div class="col col-12 col-lg-2">
+                                        <div class="col col-12 col-lg-3">
                                             @if ($extrawphoto || $extrawvideo || $extrawaudio)
-                                                <div class="card shadow rounded-3">
+                                                <div class="card shadow rounded-5">
                                                     <div class="p-2 text-center">
-                                                        <span class="display-1 text-warning"><i
-                                                                class="bi bi-file-zip-fill"></i></span><br>
-                                                        <span class="small">{{ $edit->file_mentah }}</span>
+                                                        <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
+                                                            alt="" class="img-fluid"><br>
+                                                        <span class="small text-secondary">{{ $edit->file_mentah }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -292,13 +290,13 @@
                                 <div class="mb-4">
                                     <label for="" class="form-label">File project sebelumnya</label><br>
                                     <div class="row">
-                                        <div class="col col-12 col-lg-2">
+                                        <div class="col col-12 col-lg-3">
                                             @if ($extrawphoto || $extrawvideo || $extrawaudio)
-                                                <div class="card shadow rounded-3">
+                                                <div class="card shadow rounded-5">
                                                     <div class="p-2 text-center">
-                                                        <span class="display-1 text-warning"><i
-                                                                class="bi bi-file-zip-fill"></i></span><br>
-                                                        <span class="small">{{ $edit->file_mentah }}</span>
+                                                        <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
+                                                            alt="" class="img-fluid"><br>
+                                                        <span class="small text-secondary">{{ $edit->file_mentah }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -360,6 +358,21 @@
                         @endif
 
 
+                        <div class="form-group mb-3" id="input7">
+                            <label>Sub Kategori</label>
+                            <div class="d-flex flex-row">
+                                @foreach ($subcategory as $item)
+                                    <div class="form-check ms-2 small">
+                                        <input class="form-check-input" type="checkbox" value="{{ $item->id }}"
+                                            id="{{ $item->sub_category_name }}" name="sub_category_ids[]"
+                                            @if (in_array($item->id, $selectedSubCategories)) checked @endif>
+                                        <label class="form-check-label" for="{{ $item->sub_category_name }}">#
+                                            {{ $item->sub_category_name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
 
                         <div class="my-4">
                             <label for="" class="form-label">Deskripsi</label>

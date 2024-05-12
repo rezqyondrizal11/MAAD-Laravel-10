@@ -5,7 +5,7 @@
 @section('container')
 {{-- {{ phpinfo() }} --}}
     <div class="container mt-3">
-        <!-- Filter Resolution -->
+        {{-- Filter Resolution --}}
         <div class="btn-group dropend {{ Request::is('photo', 'photo/*') ? '' : 'd-none' }} mt-3">
             <button type="button" class="btn btn-danger btn-sm">
                 Resolution
@@ -36,16 +36,17 @@
 
         <div class="row">
             @foreach ($post as $item)
+            @php
+            $ext = pathinfo($item->file, PATHINFO_EXTENSION)
+            @endphp
+
                 {{-- Photo --}}
                 @if (Request::path() == 'photo')
-                    @php
-                        $path_photo = asset('storage/uploads/photo/compress/' . $item->file);
-                        $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
-                    @endphp
-                    @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')
+
+                    @if (in_array($ext, ['jpg', 'png', 'jpeg']))
                         <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
-                                <img src="{{ $path_photo }}" alt="Card Image" class="img-fluid" />
+                                 <img src="{{ asset('uploads/photo/compress/' .$item->file) }}" alt="Card Image" class="img-fluid" />
                                 <div class="category-logo">
                                     <i class="bi bi-image-fill"></i>
                                 </div>
@@ -79,22 +80,18 @@
 
                     {{-- Video --}}
                 @elseif (Request::path() == 'video')
-                    @php
-                        $path_video =  asset('storage/uploads/video/' . $item->file);
-                        $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
-                    @endphp
-                    @if ($extvideo)
+                    @if ($ext)
                     <ataiv class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                         <div class="card-custom shadow rounded-3 mx-auto">
                                 <video class="" controls>
-                                @if ($extvideo == 'mp4')
-                                    <source src="{{ $path_video }}" alt="" type="video/mp4">
+                                @if ($ext == 'mp4')
+                                    <source src="{{ asset('uploads/video/' .$item->file) }}" alt="" type="video/mp4">
                                 @endif
-                                @if ($extvideo == 'mkv')
-                                    <source src="{{ $path_video }}" alt="" type="video/mkv">
+                                @if ($ext == 'mkv')
+                                    <source src="{{ asset('uploads/video/' .$item->file) }}" alt="" type="video/mkv">
                                 @endif
-                                @if ($extvideo == 'webm')
-                                    <source src="{{ $path_video }}" alt="" type="video/webm">
+                                @if ($ext == 'webm')
+                                    <source src="{{ asset('uploads/video/' .$item->file) }}" alt="" type="video/webm">
                                     @endif
                             </video>
                                 <div class="category-logo">
@@ -139,11 +136,7 @@
 
                     {{-- Audio --}}
                 @elseif (Request::path() == 'audio')
-                    @php
-                        $path_audio = asset('storage/uploads/audio/' . $item->file);
-                        $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
-                    @endphp
-                    @if ($extaudio == 'mp3' || $extaudio == 'm4a')
+                    @if (in_array($ext, ['mp3', 'm4a']))
 
                         <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
@@ -165,11 +158,11 @@
                                 <div class="deskripsi">
                                     <h5 class="fw-bold teks">{{ $item->name }}</h5>
                                     <p class="fs-6 teks">{{ $item->body }}</p>
-                                    @if ($extaudio == 'mp3')
-                                        <audio src="{{ $path_audio }}" type="audio/mp3" controls class="waudio border border-success rounded-5"></audio>
+                                    @if ($ext == 'mp3')
+                                        <audio src="{{ asset('uploads/audio/' .$item->file) }}" type="audio/mp3" controls class="waudio border border-success rounded-5"></audio>
                                     @endif
-                                    @if ($extaudio == 'm4a')
-                                        <audio src="{{ $path_audio }}" type="audio/m4a" controls class="waudio border border-success rounded-5"></audio>
+                                    @if ($ext == 'm4a')
+                                        <audio src="{{ asset('uploads/audio/' .$item->file) }}" type="audio/m4a" controls class="waudio border border-success rounded-5"></audio>
                                         @endif
                                     <a href="{{ route('detail', [$item->slug]) }}" class="card-button btn btn-sm warna_search btn-danger">Detail</a>
                                 </div>
@@ -199,21 +192,10 @@
 
                     {{-- Home --}}
                 @else
-                    @php
-                        $path_photo = asset('storage/uploads/photo/compress/' . $item->file);
-                        $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
-
-                        $path_video = asset('storage/uploads/video/' . $item->file);
-                        $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
-
-                        $path_audio = asset('storage/uploads/audio/' . $item->file);
-                        $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
-
-                    @endphp
-                    @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')
+                    @if (in_array($ext, ['jpg', 'png', 'jpeg']))
                          <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
-                                <img src="{{ $path_photo }}" alt="Card Image" class="img-fluid" />
+                                <img src="{{ asset('uploads/photo/' .$item->file) }}" alt="Card Image" class="img-fluid" />
                                 <div class="category-logo">
                                     <i class="bi bi-image-fill"></i>
                                 </div>
@@ -225,18 +207,18 @@
                             </div>
                         </div>
                     @endif
-                    @if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm')
+                    @if (in_array($ext, ['mp4', 'mkv', 'webm']))
                         <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
                                 <video class="" controls>
-                                    @if ($extvideo == 'mp4')
-                                        <source src="{{ $path_video }}" alt="" type="video/mp4">
+                                    @if ($ext == 'mp4')
+                                        <source src="{{ asset('uploads/video/' .$item->file) }}" alt="" type="video/mp4">
                                     @endif
-                                    @if ($extvideo == 'mkv')
-                                        <source src="{{ $path_video }}" alt="" type="video/mkv">
+                                    @if ($ext == 'mkv')
+                                        <source src="{{ asset('uploads/video/' .$item->file) }}" alt="" type="video/mkv">
                                     @endif
-                                    @if ($extvideo == 'webm')
-                                        <source src="{{ $path_video }}" alt="" type="video/webm">
+                                    @if ($ext == 'webm')
+                                        <source src="{{ asset('uploads/video/' .$item->file) }}" alt="" type="video/webm">
                                         @endif
                                 </video>
                                     <div class="category-logo">
@@ -250,7 +232,7 @@
                                 </div>
                             </div>
                     @endif
-                    @if ($extaudio == 'mp3' || $extaudio == 'm4a')
+                    @if (in_array($ext, ['mp3', 'm4a']))
                         <div class="col col-12 col-md-6 col-lg-3 mt-5" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
                                 <div class="music p-5 bg-dark">
@@ -271,11 +253,11 @@
                                 <div class="deskripsi">
                                     <h5 class="fw-bold teks">{{ $item->name }}</h5>
                                     <p class="fs-6 teks">{{ $item->body }}</p>
-                                    @if ($extaudio == 'mp3')
-                                        <audio src="{{ $path_audio }}" type="audio/mp3" controls class="waudio border border-success rounded-5"></audio>
+                                    @if ($ext == 'mp3')
+                                        <audio src="{{ asset('uploads/audio/' .$item->file) }}" type="audio/mp3" controls class="waudio border border-success rounded-5"></audio>
                                     @endif
-                                    @if ($extaudio == 'm4a')
-                                        <audio src="{{ $path_audio }}" type="audio/m4a" controls class="waudio border border-success rounded-5"></audio>
+                                    @if ($ext == 'm4a')
+                                        <audio src="{{ asset('uploads/audio/' .$item->file) }}" type="audio/m4a" controls class="waudio border border-success rounded-5"></audio>
                                         @endif
                                     <a href="{{ route('detail', [$item->slug]) }}" class="card-button btn btn-sm warna_search btn-danger">Detail</a>
                                 </div>

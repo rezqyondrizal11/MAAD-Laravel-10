@@ -157,13 +157,13 @@
                                 <tbody>
                                     @foreach ($posts as $post)
                                         @php
-                                            $path_photo = asset('storage/uploads/photo/compress/' . $post->file);
+                                            $path_photo = asset('uploads/photo/compress/' . $post->file);
                                             $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
 
-                                            $path_video = asset('storage/uploads/video/' . $post->file);
+                                            $path_video = asset('uploads/video/' . $post->file);
                                             $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
 
-                                            $path_audio = asset('storage/uploads/audio/' . $post->file);
+                                            $path_audio = asset('uploads/audio/' . $post->file);
                                             $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
 
                                             $path_gd = $post->urlgd;

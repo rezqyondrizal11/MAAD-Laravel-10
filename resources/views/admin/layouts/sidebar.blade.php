@@ -33,16 +33,21 @@
                 <i class="fas fa-fw fa-chart-bar"></i>
                 <span>Data Summary</span></a>
         </li>
+        <li class="nav-item {{ $page == 'category' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_category_show') }}">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Category</span></a>
+        </li>
         <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin-post-show') }}">
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Post</span></a>
         </li>
-        {{-- <li class="nav-item active">
-                <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
-                    <i class="fa fa-file"></i>
-                    <span>Sub Category</span></a>
-            </li> --}}
+        <li class="nav-item {{ $page == 'sub-category' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
+                <i class="fa fa-file"></i>
+                <span>Sub Category</span></a>
+        </li>
         <li class="nav-item {{ $page == 'user' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_user_show') }}">
                 <i class="fas fa-users fa-cog"></i> <span>Mahasiswa</span>
@@ -77,11 +82,11 @@
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Post</span></a>
         </li>
-        {{-- <li class="nav-item active">
-                <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
-                    <i class="fa fa-file"></i>
-                    <span>Sub Category</span></a>
-            </li> --}}
+        <li class="nav-item {{ $page == 'sub-category' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
+                <i class="fa fa-file"></i>
+                <span>Sub Category</span></a>
+        </li>
         <li class="nav-item {{ $page == 'dosen' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_dosen_show') }}">
                 <i class="fas fa-users fa-cog"></i> <span>Dosen</span>

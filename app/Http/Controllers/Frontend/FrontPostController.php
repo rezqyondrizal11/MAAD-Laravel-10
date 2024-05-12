@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Models\Post;
+use App\Models\SubCategoryPost;
 use App\Models\User;
 use BenSampo\Embed\Rules\EmbeddableUrl;
 use Cviebrock\EloquentSluggable\Services\SlugService;
@@ -18,6 +20,7 @@ use FFMpeg\Filters\Video\VideoFilters;
 use Illuminate\Support\Facades\Storage;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Cloudinary\Api\Exception\ApiError;
+use Illuminate\Support\Facades\File;
 
 // use Illuminate\Support\Facades\Storage;
 
@@ -59,16 +62,57 @@ class FrontPostController extends Controller
     {
         $page = 'upload';
         $category = Category::get();
+        $subcategory = SubCategory::get();
         $show = User::where('name', $name)->first();
-        return view('frontend.Post.front_post_create', compact('category', 'show', 'page'));
+        return view('frontend.Post.front_post_create', compact('category', 'subcategory', 'show', 'page'));
     }
 
     public function store(Request $request)
     {
+        $pilkat = $request->category_menu;
         $request->validate([
             'title' => 'required',
-            'file' => 'mimes:png,jpg,jpeg,mp4,mkv,webm,mp3,m4a,eps,psd,ai,aep,aepx,prproj,aup3,sesx,als,zip,rar|file|max:10240',
-            'file2' => 'file|max:10240',
+            'file' => [
+                'mimes:png,jpg,jpeg,mp4,mkv,webm,mp3,m4a,eps,psd,ai,aep,aepx,prproj,aup3,sesx,als,zip,rar',
+                'file',
+                'max:10240',
+                function ($attribute, $value, $fail) use ($pilkat) {
+                    $ext = $value->getClientOriginalExtension();
+                    $categoryFileTypes = [
+                        3 => ['png', 'jpg', 'jpeg', 'eps', 'psd', 'ai'],
+                        4 => ['mp4', 'mkv', 'webm'],
+                        5 => ['mp3', 'm4a'],
+                    ];
+
+                    if (isset($categoryFileTypes[$pilkat])) {
+                        if (!in_array($ext, $categoryFileTypes[$pilkat])) {
+                            $fail('Tipe file yang diunggah tidak sesuai dengan kategori yang dipilih.');
+                        }
+                    } else {
+                        $fail('Kategori yang dipilih tidak memiliki tipe file ini.');
+                    }
+                },
+            ],
+            'file2' => [
+                'file',
+                'max:10240',
+                function ($attribute, $value, $fail) use ($pilkat) {
+                    $ext = $value->getClientOriginalExtension();
+                    $categoryFileTypes = [
+                        3 => ['eps', 'psd', 'ai', 'zip', 'rar'],
+                        4 => ['aep', 'aepx', 'prproj', 'zip', 'rar'],
+                        5 => ['aup3', 'sesx', 'als', 'zip', 'rar'],
+                    ];
+
+                    if (isset($categoryFileTypes[$pilkat])) {
+                        if (!in_array($ext, $categoryFileTypes[$pilkat])) {
+                            $fail('Tipe file yang diunggah tidak sesuai dengan kategori yang dipilih.');
+                        }
+                    } else {
+                        $fail('Kategori yang dipilih tidak memiliki tipe file ini.');
+                    }
+                },
+            ],
             'body' => 'required',
             'url=' => [new EmbeddableUrl],
 
@@ -98,10 +142,10 @@ class FrontPostController extends Controller
                 $compressedImage = Image::make($files)->encode($ext, 10);
                 $resolution = $compressedImage->height() . "x" . $compressedImage->width();
 
-                $compressedImage->save(storage_path('app/public/uploads/photo/compress/') . $final);
+                $compressedImage->save(public_path('uploads/photo/compress/') . $final);
 
                 // menyimpan gambar asli
-                $request->file('file')->move(storage_path('app/public/uploads/photo/'), $final);
+                $request->file('file')->move(public_path('uploads/photo/'), $final);
                 $store->resolution = $resolution;
                 $store->file = $final;
             }
@@ -109,14 +153,14 @@ class FrontPostController extends Controller
             if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
                 $ext = $request->file('file')->extension();
                 $final = 'video' . time() . '.' . $ext;
-                $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
+                $request->file('file')->move(public_path('uploads/video/'), $final);
                 $store->file = $final;
             }
             // audio
             if ($ext == 'mp3' || $ext == 'm4a') {
                 $ext = $request->file('file')->extension();
                 $final = 'audio' . time() . '.' . $ext;
-                $request->file('file')->move(storage_path('app/public/uploads/audio/'), $final);
+                $request->file('file')->move(public_path('uploads/audio/'), $final);
                 $store->file = $final;
             }
         }
@@ -160,35 +204,35 @@ class FrontPostController extends Controller
             if ($ext2 == 'eps' || $ext2 == 'psd' || $ext2 == 'ai' || $ext2 == 'cdr') {
                 // $ext2 = $request->file('file2')->extension();
                 $final2 = 'rawphoto' . time() . '.' . $ext2;
-                $request->file('file2')->move(storage_path('app/public/uploads/rawphoto'), $final2);
+                $request->file('file2')->move(public_path('uploads/rawphoto'), $final2);
                 $store->file_mentah = $final2;
             }
 
             if ($ext2 == 'aep' || $ext2 == 'aepx' || $ext2 == 'prproj') {
                 // $ext2 = $request->file('file2')->getClientOriginalExtension();
                 $final2 = 'rawvideo' . time() . '.' . $ext2;
-                $request->file('file2')->move(storage_path('app/public/uploads/rawvideo'), $final2);
+                $request->file('file2')->move(public_path('uploads/rawvideo'), $final2);
                 $store->file_mentah = $final2;
             }
 
             if ($ext2 == 'aup3' || $ext2 == 'sesx' || $ext2 == 'als') {
                 $final2 = 'rawaudio' . time() . '.' . $ext2;
-                $request->file('file2')->move(storage_path('app/public/uploads/rawaudio'), $final2);
+                $request->file('file2')->move(public_path('uploads/rawaudio'), $final2);
                 $store->file_mentah = $final2;
             }
 
             if ($ext2 == 'rar' || $ext2 == 'zip') {
                 if ($pilkat == 3) {
                     $final2 = 'rawphoto' . time() . '.' . $ext2;
-                    $request->file('file2')->move(storage_path('app/public/uploads/rawphoto'), $final2);
+                    $request->file('file2')->move(public_path('uploads/rawphoto'), $final2);
                     $store->file_mentah = $final2;
                 } elseif ($pilkat == 4) {
                     $final2 = 'rawvideo' . time() . '.' . $ext2;
-                    $request->file('file2')->move(storage_path('app/public/uploads/rawvideo'), $final2);
+                    $request->file('file2')->move(public_path('uploads/rawvideo'), $final2);
                     $store->file_mentah = $final2;
                 } elseif ($pilkat == 5) {
                     $final2 = 'rawaudio' . time() . '.' . $ext2;
-                    $request->file('file2')->move(storage_path('app/public/uploads/rawaudio'), $final2);
+                    $request->file('file2')->move(public_path('uploads/rawaudio'), $final2);
                     $store->file_mentah = $final2;
                 }
             }
@@ -197,45 +241,19 @@ class FrontPostController extends Controller
 
 
         $store->save();
+
+        // Menyimpan multiple subkategori
+        $subCategoryIds = $request->sub_category_ids; // asumsikan ini adalah array ID dari subkategori
+        foreach ($subCategoryIds as $subCategoryId) {
+            $store2 = new SubCategoryPost();
+            $store2->post_id = $store->id;
+            $store2->category_id = $store->category_id;
+            $store2->sub_category_id = $subCategoryId;
+            $store2->save();
+        }
+
         return redirect()->back()->with('success', 'Upload Success');
     }
-
-    // public function delete($slug)
-    // {
-    //     $delete = Post::where('slug', $slug)->first();
-
-    //     if ($delete->file == '') {
-    //         $delete->delete();
-    //         return redirect()->back()->with('success', 'berhasil di hapus');
-    //     } else {
-    //         if (file_exists(storage_path('app/public/uploads/photo/' . $delete->file))) {
-    //             unlink(storage_path('app/public/uploads/photo/' . $delete->file));
-    //             unlink(storage_path('app/public/uploads/photo/compress/' . $delete->file));
-    //         } elseif (file_exists(storage_path('app/public/uploads/video/' . $delete->file))) {
-    //             unlink(storage_path('app/public/uploads/video/' . $delete->file));
-    //             unlink(storage_path('app/public/uploads/video/thumbnail/' . $delete->thumbnail));
-    //             unlink(storage_path('app/public/uploads/video/720p/' . $delete->q720p));
-    //             unlink(storage_path('app/public/uploads/video/480p/' . $delete->q480p));
-    //             unlink(storage_path('app/public/uploads/video/360p/' . $delete->q360p));
-    //         } elseif (file_exists(storage_path('app/public/uploads/audio/' . $delete->file))) {
-    //             unlink(storage_path('app/public/uploads/audio/' . $delete->file));
-    //         } elseif (file_exists(storage_path('app/public/uploads/rawphoto/' . $delete->file))) {
-    //             unlink(storage_path('app/public/uploads/rawphoto/' . $delete->file_mentah));
-    //         } elseif (file_exists(storage_path('app/public/uploads/rawvideo/' . $delete->file))) {
-    //             unlink(storage_path('app/public/uploads/rawvideo/' . $delete->file_mentah));
-    //             // } elseif (file_exists(storage_path('app/public/uploads/rawaudio/' . $delete->file))) {
-    //             //     unlink(storage_path('app/public/uploads/rawaudio/' . $delete->file_mentah));
-    //         }
-    //         $delete->delete();
-    //         return redirect()->back()->with('success', 'berhasil di hapus');
-    //     }
-    // }
-
-    // public function view($id, $name)
-    // {
-    //     $view = Post::where('id', $id)->where('name', $name)->first();
-    //     return view('detail', compact('view'));
-    // }
 
     public function delete($slug)
     {
@@ -252,53 +270,49 @@ class FrontPostController extends Controller
 
             if (in_array($extension, ['jpg', 'png', 'jpeg', 'gif', 'eps', 'psd', 'ai'])) {
                 $filePaths = array_merge($filePaths, [
-                    'public/uploads/photo/' . $delete->file,
-                    'public/uploads/photo/compress/' . $delete->file,
-                    'public/uploads/rawphoto/' . $delete->file_mentah,
+                    public_path('uploads/photo/' . $delete->file),
+                    public_path('uploads/photo/compress/' . $delete->file),
+                    public_path('uploads/rawphoto/' . $delete->file_mentah),
                 ]);
             } elseif (in_array($extension, ['mp4', 'avi', 'mov', 'aep', 'aepx', 'prproj'])) {
                 $filePaths = array_merge($filePaths, [
-                    'public/uploads/video/' . $delete->file,
-                    // 'public/uploads/video/thumbnail/' . $delete->thumbnail,
-                    // 'public/uploads/video/720p/' . $delete->q720p,
-                    // 'public/uploads/video/480p/' . $delete->q480p,
-                    // 'public/uploads/video/360p/' . $delete->q360p,
-                    'public/uploads/rawvideo/' . $delete->file_mentah,
+                    public_path('uploads/video/' . $delete->file),
+                    public_path('uploads/rawvideo/' . $delete->file_mentah),
                 ]);
             } elseif (in_array($extension, ['mp3', 'm4a', 'wav', 'aup3', 'sesx', 'als'])) {
                 $filePaths = array_merge($filePaths, [
-                    'public/uploads/audio/' . $delete->file,
-                    'public/uploads/rawaudio/' . $delete->file_mentah,
+                    public_path('uploads/audio/' . $delete->file),
+                    public_path('uploads/rawaudio/' . $delete->file_mentah),
                 ]);
             }
         }
 
         foreach ($filePaths as $filePath) {
-            if (Storage::exists($filePath)) {
-                Storage::delete($filePath);
+            if (File::exists($filePath)) {
+                File::delete($filePath);
             }
         }
 
         if ($delete->url) {
             $delete->url = null;
-            if (Storage::exists('public/uploads/rawvideo/' . $delete->file_mentah)) {
-                Storage::delete('public/uploads/rawvideo/' . $delete->file_mentah);
+            if (File::exists(public_path('uploads/rawvideo/' . $delete->file_mentah))) {
+                File::delete(public_path('uploads/rawvideo/' . $delete->file_mentah));
             }
         }
 
         if ($delete->urlgd) {
             $delete->urlgd = null;
             if ($delete->category_id == 3) {
-                if (Storage::exists('public/uploads/rawphoto/' . $delete->file_mentah)) {
-                    Storage::delete('public/uploads/rawphoto/' . $delete->file_mentah);
+                if (File::exists(public_path('uploads/rawphoto/' . $delete->file_mentah))) {
+                    File::delete(public_path('uploads/rawphoto/' . $delete->file_mentah));
                 }
             } elseif ($delete->category_id == 4) {
-                if (Storage::exists('public/uploads/rawvideo/' . $delete->file_mentah)) {
-                    Storage::delete('public/uploads/rawvideo/' . $delete->file_mentah);
+                if (File::exists(public_path('uploads/rawvideo/' . $delete->file_mentah))) {
+                    File::delete(public_path('uploads/rawvideo/' . $delete->file_mentah));
                 }
             } elseif ($delete->category_id == 5) {
-                if (Storage::exists('public/uploads/rawaudio/' . $delete->file_mentah)) {
-                    Storage::delete('public/uploads/rawaudio/' . $delete->file_mentah);
+                if (File::exists(public_path('uploads/rawaudio/' . $delete->file_mentah))) {
+                    File::delete(public_path('uploads/rawaudio/' . $delete->file_mentah));
                 }
             }
         }
@@ -307,15 +321,19 @@ class FrontPostController extends Controller
         return redirect()->back()->with('success', 'Postingan dan file terkait berhasil dihapus.');
     }
 
-
     public function edit($slug)
     {
         $page = 'editPost';
         $edit = Post::where('slug', $slug)->first();
         $post = Post::where('slug', $slug)->first();
         $category = Category::get();
+        $subcategory = SubCategory::get();
+        // Mendapatkan subkategori yang telah dipilih untuk post
+        $selectedSubCategories = $edit->rSubcategory()->pluck('sub_category_id')->toArray();
+        // dd($selectedSubCategories);
+        // die;
         $show = User::findOrFail(Auth::id());
-        return view('frontend.Post.front_post_edit', compact('edit', 'post', 'category', 'page', 'show'));
+        return view('frontend.Post.front_post_edit', compact('edit', 'post', 'category', 'page', 'show', 'subcategory', 'selectedSubCategories'));
     }
 
     public function update(Request $request, $slug)
@@ -376,7 +394,7 @@ class FrontPostController extends Controller
             $files = $request->file('file');
             $ext = $files->getClientOriginalExtension();
             if (empty($update->file)) {
-                if (file_exists(storage_path('app/public/uploads/photo/' . $update->file == ''))) {
+                if (file_exists(public_path('uploads/photo/' . $update->file == ''))) {
                     if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
                         $ext = $request->file('file')->extension();
                         $final = 'photo' . time() . '.' . $ext;
@@ -385,32 +403,32 @@ class FrontPostController extends Controller
                         $compressedImage = Image::make($files)->encode($ext, 10);
                         $resolution = $compressedImage->height() . "x" . $compressedImage->width();
 
-                        $compressedImage->save(storage_path('app/public/uploads/photo/compress/') . $final);
+                        $compressedImage->save(public_path('uploads/photo/compress/') . $final);
 
                         // menyimpan gambar asli
-                        $request->file('file')->move(storage_path('app/public/uploads/photo/'), $final);
+                        $request->file('file')->move(public_path('uploads/photo/'), $final);
                         $update->resolution = $resolution;
                         $update->file = $final;
                     }
-                } elseif (file_exists(storage_path('app/public/uploads/video/' . $update->file == ''))) {
+                } elseif (file_exists(public_path('uploads/video/' . $update->file == ''))) {
                     if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
                         $ext = $request->file('file')->extension();
                         $final = 'video' . time() . '.' . $ext;
-                        $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
+                        $request->file('file')->move(public_path('uploads/video/'), $final);
                         $update->file = $final;
                     }
-                } elseif (file_exists(storage_path('app/public/uploads/audio/' . $update->file == ''))) {
+                } elseif (file_exists(public_path('uploads/audio/' . $update->file == ''))) {
                     if ($ext == 'mp3' || $ext == 'm4a') {
                         $ext = $request->file('file')->extension();
                         $final = 'audio' . time() . '.' . $ext;
-                        $request->file('file')->move(storage_path('app/public/uploads/audio/'), $final);
+                        $request->file('file')->move(public_path('uploads/audio/'), $final);
                         $update->file = $final;
                     }
                 }
             } elseif ($update->file) {
-                if (file_exists(storage_path('app/public/uploads/photo/' . $update->file))) {
-                    unlink(storage_path('app/public/uploads/photo/' . $update->file));
-                    unlink(storage_path('app/public/uploads/photo/compress/' . $update->file));
+                if (file_exists(public_path('uploads/photo/' . $update->file))) {
+                    unlink(public_path('uploads/photo/' . $update->file));
+                    unlink(public_path('uploads/photo/compress/' . $update->file));
                     if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg') {
                         $ext = $request->file('file')->extension();
                         $final = 'photo' . time() . '.' . $ext;
@@ -419,27 +437,27 @@ class FrontPostController extends Controller
                         $compressedImage = Image::make($files)->encode($ext, 10);
                         $resolution = $compressedImage->height() . "x" . $compressedImage->width();
 
-                        $compressedImage->save(storage_path('app/public/uploads/photo/compress/') . $final);
+                        $compressedImage->save(public_path('uploads/photo/compress/') . $final);
 
                         // menyimpan gambar asli
-                        $request->file('file')->move(storage_path('app/public/uploads/photo/'), $final);
+                        $request->file('file')->move(public_path('uploads/photo/'), $final);
                         $update->resolution = $resolution;
                         $update->file = $final;
                     }
-                } elseif (file_exists(storage_path('app/public/uploads/video/' . $update->file))) {
-                    unlink(storage_path('app/public/uploads/video/' . $update->file));
+                } elseif (file_exists(public_path('uploads/video/' . $update->file))) {
+                    unlink(public_path('uploads/video/' . $update->file));
                     if ($ext == 'mp4' || $ext == 'mkv' || $ext == 'webm') {
                         $ext = $request->file('file')->extension();
                         $final = 'video' . time() . '.' . $ext;
-                        $request->file('file')->move(storage_path('app/public/uploads/video/'), $final);
+                        $request->file('file')->move(public_path('uploads/video/'), $final);
                         $update->file = $final;
                     }
-                } elseif (file_exists(storage_path('app/public/uploads/audio/' . $update->file))) {
-                    unlink(storage_path('app/public/uploads/audio/' . $update->file));
+                } elseif (file_exists(public_path('uploads/audio/' . $update->file))) {
+                    unlink(public_path('uploads/audio/' . $update->file));
                     if ($ext == 'mp3' || $ext == 'm4a') {
                         $ext = $request->file('file')->extension();
                         $final = 'audio' . time() . '.' . $ext;
-                        $request->file('file')->move(storage_path('app/public/uploads/audio/'), $final);
+                        $request->file('file')->move(public_path('uploads/audio/'), $final);
                         $update->file = $final;
                     }
                 }
@@ -448,45 +466,45 @@ class FrontPostController extends Controller
             $files2 = $request->file('file2');
             $ext2 = $files2->getClientOriginalExtension();
             if (empty($update->file_mentah)) {
-                if ($pilkat == 3 && file_exists(storage_path('app/public/uploads/rawphoto/' . $update->file_mentah == ''))) {
+                if ($pilkat == 3 && file_exists(public_path('uploads/rawphoto/' . $update->file_mentah == ''))) {
                     if ($ext2 == 'eps' || $ext2 == 'psd' || $ext2 == 'ai' || $ext2 == 'cdr' || $ext2 == 'zip' || $ext2 == 'rar') {
                         $final2 = 'rawphoto' . time() . '.' . $ext2;
-                        $request->file('file2')->move(storage_path('app/public/uploads/rawphoto'), $final2);
+                        $request->file('file2')->move(public_path('uploads/rawphoto'), $final2);
                         $update->file_mentah = $final2;
                     }
-                } elseif ($pilkat == 4 && storage_path('app/public/uploads/rawvideo/')) {
+                } elseif ($pilkat == 4 && public_path('uploads/rawvideo/')) {
                     if ($ext2 == 'aep' || $ext2 == 'aepx' || $ext2 == 'prproj' || $ext2 == 'zip' || $ext2 == 'rar') {
                         $final2 = 'rawvideo' . time() . '.' . $ext2;
-                        $request->file('file2')->move(storage_path('app/public/uploads/rawvideo'), $final2);
+                        $request->file('file2')->move(public_path('uploads/rawvideo'), $final2);
                         $update->file_mentah = $final2;
                     }
-                } elseif ($pilkat == 5 && storage_path('app/public/uploads/rawaudio/')) {
+                } elseif ($pilkat == 5 && public_path('uploads/rawaudio/')) {
                     if ($ext2 == 'aup3' || $ext2 == 'sesx' || $ext2 == 'als' || $ext2 == 'zip' || $ext2 == 'rar') {
                         $final2 = 'rawaudio' . time() . '.' . $ext2;
-                        $request->file('file2')->move(storage_path('app/public/uploads/rawaudio'), $final2);
+                        $request->file('file2')->move(public_path('uploads/rawaudio'), $final2);
                         $update->file_mentah = $final2;
                     }
                 }
             } elseif ($update->file_mentah) {
-                if ($pilkat == 3 && file_exists(storage_path('app/public/uploads/rawphoto/' . $update->file_mentah))) {
-                    unlink(storage_path('app/public/uploads/rawphoto/' . $update->file_mentah));
+                if ($pilkat == 3 && file_exists(public_path('uploads/rawphoto/' . $update->file_mentah))) {
+                    unlink(public_path('uploads/rawphoto/' . $update->file_mentah));
                     if ($ext2 == 'eps' || $ext2 == 'psd' || $ext2 == 'ai' || $ext2 == 'cdr' || $ext2 == 'zip' || $ext2 == 'rar') {
                         $final2 = 'rawphoto' . time() . '.' . $ext2;
-                        $request->file('file2')->move(storage_path('app/public/uploads/rawphoto'), $final2);
+                        $request->file('file2')->move(public_path('uploads/rawphoto'), $final2);
                         $update->file_mentah = $final2;
                     }
-                } elseif ($pilkat == 4 && file_exists(storage_path('app/public/uploads/rawvideo/' . $update->file_mentah))) {
-                    unlink(storage_path('app/public/uploads/rawvideo/' . $update->file_mentah));
+                } elseif ($pilkat == 4 && file_exists(public_path('uploads/rawvideo/' . $update->file_mentah))) {
+                    unlink(public_path('uploads/rawvideo/' . $update->file_mentah));
                     if ($ext2 == 'aep' || $ext2 == 'aepx' || $ext2 == 'prproj' || $ext2 == 'zip' || $ext2 == 'rar') {
                         $final2 = 'rawvideo' . time() . '.' . $ext2;
-                        $request->file('file2')->move(storage_path('app/public/uploads/rawvideo'), $final2);
+                        $request->file('file2')->move(public_path('uploads/rawvideo'), $final2);
                         $update->file_mentah = $final2;
                     }
-                } elseif ($pilkat == 5 && file_exists(storage_path('app/public/uploads/rawaudio/' . $update->file_mentah))) {
-                    unlink(storage_path('app/public/uploads/rawaudio/' . $update->file_mentah));
+                } elseif ($pilkat == 5 && file_exists(public_path('uploads/rawaudio/' . $update->file_mentah))) {
+                    unlink(public_path('uploads/rawaudio/' . $update->file_mentah));
                     if ($ext2 == 'aup3' || $ext2 == 'sesx' || $ext2 == 'als' || $ext2 == 'zip' || $ext2 == 'rar') {
                         $final2 = 'rawaudio' . time() . '.' . $ext2;
-                        $request->file('file2')->move(storage_path('app/public/uploads/rawaudio'), $final2);
+                        $request->file('file2')->move(storage_path('uploads/rawaudio'), $final2);
                         $update->file_mentah = $final2;
                     }
                 }

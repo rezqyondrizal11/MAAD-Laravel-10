@@ -14,7 +14,7 @@
                 <div class="row justify-content-center">
                     <div class="col col-lg-8">
                         <div class="my-3">
-                            <a href="{{ route('admin_subCategory_create') }}" class="btn btn-primary"><i
+                            <a href="{{ route('admin_subCategory_create') }}" class="btn btn-sm btn-primary"><i
                                     class="fas fa-plus fa-cog"></i> Add Sub Category</a>
                         </div>
                         <div class="table-responsive">
@@ -22,10 +22,10 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Category Name</th>
+                                        {{-- <th>Category Name</th> --}}
                                         <th>Sub Category Name</th>
-                                        <th>Sub Category Order</th>
-                                        <th>Show On Menu</th>
+                                        {{-- <th>Sub Category Order</th>
+                                        <th>Show On Menu</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -33,26 +33,18 @@
                                     @foreach ($subCategories as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->rCategory->name }}</td>
+                                            {{-- <td>{{ $item->rCategory->name }}</td> --}}
                                             <td>{{ $item->sub_category_name }}</td>
-                                            <td>{{ $item->sub_category_order }}</td>
-                                            <td>{{ $item->show_on_menu }}</td>
+                                            {{-- <td>{{ $item->sub_category_order }}</td>
+                                            <td>{{ $item->show_on_menu }}</td> --}}
                                             <td>
                                                 <a href="{{ route('admin_subCategory_edit', $item->id) }}"
-                                                    class="btn btn-success"><i class="fa fa-edit"></i>
+                                                    class="btn btn-sm btn-success"><i class="fa fa-edit"></i>
                                                     Edit</a>
                                                 <a href="{{ route('admin_subCategory_delete', $item->id) }}"
-                                                    class="btn btn-danger" onclick="return confirm('are you sure?')"><i
-                                                        class="fa fa-edit"></i>
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('are you sure?')"><i class="fa fa-edit"></i>
                                                     Delete</a>
-
-                                                {{-- <form action="{{ route('admin_category_delete', $category->id) }}"
-                                                    method="get">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button class="btn btn-danger"><i class="fas fa-trash"></i>
-                                                        Delete</button>
-                                                </form> --}}
                                             </td>
                                         </tr>
                                     @endforeach

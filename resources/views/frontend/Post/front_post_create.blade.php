@@ -14,7 +14,7 @@
                             <p class="fs-3">Upload Post</p>
                         </div>
                         <div class="col col-lg-4 text-end">
-                            <button class="btn btn-sm btn-orange btn-danger rounded-pill" data-bs-toggle="modal"
+                            <button class="btn btn-sm btn-orange btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#ketentuan">
                                 <i class="bi bi-lock-fill"></i>
                             </button>
@@ -113,6 +113,21 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <div class="form-group mb-3" id="input7">
+                            <label>Sub Kategori</label>
+                            <div class="d-flex flex-row">
+                                @foreach ($subcategory as $item)
+                                    <div class="form-check ms-2 small">
+                                        <input class="form-check-input" type="checkbox" value="{{ $item->id }}"
+                                            id="{{ $item->sub_category_name }}" name="sub_category_ids[]">
+                                        <label class="form-check-label" for="{{ $item->sub_category_name }}">#
+                                            {{ $item->sub_category_name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
 
                         <div class="mb-3">

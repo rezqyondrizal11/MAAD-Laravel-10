@@ -18,14 +18,11 @@
                         <a class="nav-link dropdown-toggle ms-4 ms-lg-0 text-light link mt-1" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             @php
-                                $path_photo = asset(
-                                    'storage/uploads/photo/profil/' . Auth::guard()->user()->foto_profil,
-                                );
-                                $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
+                                $ext = pathinfo(Auth::guard()->user()->foto_profil, PATHINFO_EXTENSION);
                             @endphp
-                            @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')
-                                <img src="{{ asset($path_photo) }}" alt=""
-                                    class="foto-profil-nav img-fluid rounded-5">
+                            @if (in_array($ext, ['jpg', 'png', 'jpeg']))
+                                <img src="{{ asset('uploads/photo/profil/' . Auth::guard()->user()->foto_profil) }}"
+                                    alt="" class="foto-profil-nav img-fluid rounded-5">
                                 {{-- <img src="{{ asset('dist_frontend/img/profile.jpg') }}" alt=""
                                             class="img-fluid rounded-pill"> --}}
                             @elseif ($extphoto == '')
@@ -53,8 +50,14 @@
                                         Unlock Premium</a></li>
                             @else
                             @endif
-                            <li><a class="dropdown-item" href="{{ route('user_logout') }}"><i
-                                        class="bi bi-box-arrow-left"></i> Logout</a></li>
+                            <li>
+                                <form action="{{ route('user_logout') }}" method="post">
+                                    @csrf
+                                    @method('POST')
+                                    <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-left"></i>
+                                        Logout</button>
+                                </form>
+                            </li>
 
                         </ul>
                     </li>
@@ -108,7 +111,7 @@
                     </li>
                 @else
                     <li>
-                        <a class="nav-link text-light rounded-4 ms-4 ms-lg-0 mt-1" href="#" role="button"
+                        <a class="nav-link text-light rounded-4 ms-4 ms-lg-0 mt-2" href="#" role="button"
                             data-bs-toggle="modal" data-bs-target="#order"><i class="bi bi-box-arrow-in-right"></i>
                             Login</a>
                     </li>
