@@ -47,7 +47,12 @@ class FrontPremiumController extends Controller
         ]);
 
         // Membuat objek Order dan menyimpan ke dalam database
-        $order = Order::create($request->all());
+        $orderData = $request->all();
+        $orderData['order_id'] = Auth::user()->id . '-' . time();
+
+        // Membuat objek Order dan menyimpan ke dalam database
+        $order = Order::create($orderData);
+        // $order = Order::create($request->all());
 
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
@@ -60,7 +65,8 @@ class FrontPremiumController extends Controller
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => $order->id,
+                // 'order_id' => $order->id,
+                'order_id' => $order->order_id,
                 'gross_amount' => $order->total_price,
             ),
             'customer_details' => array(
@@ -86,7 +92,8 @@ class FrontPremiumController extends Controller
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
         if ($hashed == $request->signature_key) {
             if ($request->transaction_status == 'capture' or $request->transaction_status == 'settlement') {
-                $order = Order::find($request->order_id);
+                // $order = Order::find($request->order_id);
+                $order = Order::where('order_id', $request->order_id)->first();
                 if ($order) {
                     $order->update(['status' => 'Paid']);
 

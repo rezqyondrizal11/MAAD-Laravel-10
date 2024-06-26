@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class SubCategoryPost extends Model
 {
     use HasFactory;
+    protected $fillable = ['sub_category_id', 'post_id', 'category_id'];
+
     public function rCategory()
     {
         return $this->belongsTo(Category::class, 'category_id');

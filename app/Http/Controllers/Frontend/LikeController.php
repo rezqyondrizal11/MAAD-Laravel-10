@@ -31,7 +31,7 @@ class LikeController extends Controller
         $page = 'like';
         $likePosts = Post::whereHas('rLike', function ($query) use ($name) {
             $query->where('name', $name);
-        })->latest()->paginate(8);
+        })->where('status', 'Selesai')->latest()->paginate(8);
 
         $show = User::where('name', $name)->first();
 

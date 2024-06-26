@@ -19,7 +19,7 @@ class FrontProfileController extends Controller
             $post = Post::where('user_id', $show->id)
                 ->whereHas('rCategory', function ($query) {
                     $query->where('id', 3);
-                })
+                })->where('status', 'Selesai')
                 ->latest()
                 ->with('rUser')
                 ->paginate(8);
@@ -39,7 +39,7 @@ class FrontProfileController extends Controller
             $post = Post::where('user_id', $show->id)
                 ->whereHas('rCategory', function ($query) {
                     $query->where('id', 4);
-                })
+                })->where('status', 'Selesai')
                 ->latest()
                 ->with('rUser')
                 ->paginate(8);
@@ -58,7 +58,7 @@ class FrontProfileController extends Controller
             $post = Post::where('user_id', $show->id)
                 ->whereHas('rCategory', function ($query) {
                     $query->where('id', 5);
-                })
+                })->where('status', 'Selesai')
                 ->latest()
                 ->with('rUser')
                 ->paginate(8);

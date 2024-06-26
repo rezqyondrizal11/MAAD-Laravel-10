@@ -34,7 +34,7 @@ class FrontPostController extends Controller
         $user = User::where('name', $name)->first();
 
         if ($user) {
-            $query = Post::where('user_id', $user->id);
+            $query = Post::where('user_id', $user->id)->where('status', 'Selesai');
 
             // Memproses pencarian jika parameter search_media disediakan
             if (request()->has('search_media') && request()->filled('search_media')) {
@@ -69,7 +69,8 @@ class FrontPostController extends Controller
 
     public function store(Request $request)
     {
-        $pilkat = $request->category_menu;
+        // $pilkat = $request->category_menu;
+        $pilkat = $request->linkyt ? 4 : $request->category_menu;
         $request->validate([
             'title' => 'required',
             'file' => [
@@ -127,6 +128,7 @@ class FrontPostController extends Controller
         $store->name = $request->title;
         $store->slug = $slug;
         $store->body = $request->body;
+        $store->status = 'Pending';
         $store->category_id = $request->category_menu;
 
         if ($request->file('file')) {
@@ -191,7 +193,7 @@ class FrontPostController extends Controller
         // YouTube
         if ($request->linkyt != null) {
             $pilkat = 4;
-            $store->category_id = 4;
+            $store->category_id = $pilkat;
             $store->url = $request->linkyt;
         }
         //end YouTube
@@ -243,7 +245,7 @@ class FrontPostController extends Controller
         $store->save();
 
         // Menyimpan multiple subkategori
-        $subCategoryIds = $request->sub_category_ids; // asumsikan ini adalah array ID dari subkategori
+        $subCategoryIds = $request->sub_category_ids ?? []; // asumsikan ini adalah array ID dari subkategori
         foreach ($subCategoryIds as $subCategoryId) {
             $store2 = new SubCategoryPost();
             $store2->post_id = $store->id;
@@ -252,7 +254,7 @@ class FrontPostController extends Controller
             $store2->save();
         }
 
-        return redirect()->back()->with('success', 'Upload Success');
+        return redirect()->back()->with('success', 'Menunggu ACC Dosen, Jika Sudah ACC Postingan Akan Langsung ditampilkan');
     }
 
     public function delete($slug)
@@ -544,7 +546,29 @@ class FrontPostController extends Controller
         }
 
         $update->body = $request->body;
+        $update->status = 'Pending';
         $update->update();
-        return redirect()->route('post_show', [$user->name])->with('success', 'berhasil di edit');
+
+        // Mengambil subkategori yang ada
+        $existingSubCategories = SubCategoryPost::where('post_id', $update->id)->get();
+
+        // Menghapus subkategori yang ada
+        foreach ($existingSubCategories as $subCategory) {
+            $subCategory->delete();
+        }
+
+        // Menambahkan subkategori baru dari input user
+        $subCategoryIds = $request->input('sub_category_ids', []); // asumsikan ini adalah array ID dari subkategori
+
+        if (!empty($subCategoryIds)) {
+            foreach ($subCategoryIds as $subCategoryId) {
+                $update2 = new SubCategoryPost();
+                $update2->post_id = $update->id;
+                $update2->category_id = $update->category_id;
+                $update2->sub_category_id = $subCategoryId;
+                $update2->save();
+            }
+        }
+        return redirect()->route('post_show', [$user->name])->with('success', 'Pembaruan menunggu ACC Dosen');
     }
 }

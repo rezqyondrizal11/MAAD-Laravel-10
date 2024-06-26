@@ -28,7 +28,7 @@
                 <img src="{{ asset('uploads/photo/profil/' . $show->foto_profil) }}" alt=""
                     class="img-fluid rounded-pill">
             </div>
-        @elseif ($extphoto == '')
+        @elseif ($ext == '')
             <div class="pt-5">
                 <i class="bi bi-person-circle display-2 text-light"></i>
             </div>

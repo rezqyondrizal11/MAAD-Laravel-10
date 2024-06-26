@@ -30,7 +30,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($dosens as $item)
-                                        @if ($item->role == 'Dosen')
+                                        @if ($item->role == 'Dosen' || $item->role == 'Dosen Reviewer')
                                             <tr>
                                                 <td>{{ $loop->iteration - 1 }}</td>
                                                 <td>{{ $item->nama }}</td>

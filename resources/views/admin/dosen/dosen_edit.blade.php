@@ -25,6 +25,8 @@
                             <option value="" disabled selected hidden>--- Pilih ---</option>
                             <option value="Admin" @if ($edit->role == 'Admin') selected @endif>Admin</option>
                             <option value="Dosen" @if ($edit->role == 'Dosen') selected @endif>Dosen</option>
+                            <option value="Dosen Reviewer" @if ($edit->role == 'Dosen Reviewer') selected @endif>Dosen Reviewer
+                            </option>
                         </select>
                     </div>
                     <div class="mb-3">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\SubCategoryPost;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -72,7 +73,11 @@ class AdminSubCategoryController extends Controller
 
     public function delete($id)
     {
+        // Hapus data terkait di tabel subCategoryPost
+        SubCategoryPost::where('sub_category_id', $id)->delete();
+
+        // Kemudian hapus subCategory
         SubCategory::where('id', $id)->delete();
-        return redirect()->route('admin_subCategory_show')->with('success', 'Sub Kategori Berhasil Dihapus');
+        return redirect()->route('admin_subCategory_show')->with('success', 'Sub Kategori dan Data Terkait Berhasil Dihapus');
     }
 }

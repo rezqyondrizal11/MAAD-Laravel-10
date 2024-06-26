@@ -1,6 +1,6 @@
 @extends('frontend.layouts2.main2')
 
-@section('title', 'MAD | Upload')
+@section('title', 'ASET DIGITAL | Upload')
 
 @section('container')
     <div class="container my-5">
@@ -115,7 +115,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group mb-3" id="input7">
+                        {{-- <div class="form-group mb-3" id="input7">
                             <label>Sub Kategori</label>
                             <div class="d-flex flex-row">
                                 @foreach ($subcategory as $item)
@@ -128,6 +128,17 @@
                                     </div>
                                 @endforeach
                             </div>
+                        </div> --}}
+
+                        <div class="form-group mb-3">
+                            <label>Sub Kategori</label>
+                            <select class="js-example-basic-multiple form-control" name="sub_category_ids[]"
+                                multiple="multiple" id="{{ $item->sub_category_name }}">
+                                @foreach ($subcategory as $item)
+                                    <option class="small" value="{{ $item->id }}">{{ $item->sub_category_name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="mb-3">

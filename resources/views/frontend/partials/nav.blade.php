@@ -25,7 +25,7 @@
                                     alt="" class="foto-profil-nav img-fluid rounded-5">
                                 {{-- <img src="{{ asset('dist_frontend/img/profile.jpg') }}" alt=""
                                             class="img-fluid rounded-pill"> --}}
-                            @elseif ($extphoto == '')
+                            @elseif ($ext == '')
                                 <i class="bi bi-person-circle"></i>
                             @endif
 

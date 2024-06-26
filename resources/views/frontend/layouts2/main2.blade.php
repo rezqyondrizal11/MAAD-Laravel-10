@@ -10,6 +10,9 @@
     @include('frontend.layouts.cssfront')
     {{-- js header --}}
     @include('frontend.layouts.jsfront')
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -73,6 +76,12 @@
 
     {{-- js footer --}}
     @include('frontend.layouts.jsfrontfooter')
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+    </script>
 </body>
 
 </html>

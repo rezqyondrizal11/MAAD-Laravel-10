@@ -1,7 +1,7 @@
 <!-- Awal Banner -->
 <div class="container-fluid banner">
     <video autoplay muted loop id="bg-video">
-        <source src="{{ asset('dist_frontend/img/shenhe-genshin-impact.1920x1080.mp4') }}" type="video/mp4">
+        <source src="{{ asset('dist_frontend/img/green-leaves.1920x1080.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <nav class="navbar navbar-expand-lg">

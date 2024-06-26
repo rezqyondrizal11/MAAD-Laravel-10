@@ -1,6 +1,6 @@
 @extends('frontend.layouts2.main2')
 
-@section('title', 'MAD | Your Plan')
+@section('title', 'ASET DIGITAL | Your Plan')
 
 @section('container')
     <div class="container">

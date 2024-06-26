@@ -33,15 +33,60 @@
                 <i class="fas fa-fw fa-chart-bar"></i>
                 <span>Data Summary</span></a>
         </li>
-        <li class="nav-item {{ $page == 'category' ? 'active' : '' }}">
+        {{-- <li class="nav-item {{ $page == 'category' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_category_show') }}">
                 <i class="fas fa-fw fa-list"></i>
                 <span>Category</span></a>
-        </li>
-        <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
+        </li> --}}
+        {{-- <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin-post-show') }}">
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Post</span></a>
+        </li> --}}
+        <li class="nav-item {{ $page == 'sub-category' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
+                <i class="fa fa-file"></i>
+                <span>Sub Category</span></a>
+        </li>
+        <li class="nav-item {{ $page == 'user' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_user_show') }}">
+                <i class="fas fa-users fa-cog"></i> <span>Mahasiswa</span>
+                @if ($notif = App\Models\User::where('role', 'pending')->count())
+                    <span class="badge badge-danger">
+                        {{ $notif }}
+                    </span>
+                @endif
+
+            </a>
+        </li>
+    @elseif (auth()->guard('admin')->check() && auth()->guard('admin')->user()->role == 'Dosen Reviewer')
+        <li class="nav-item {{ $page == 'rekap' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_rekap_show') }}">
+                <i class="fas fa-fw fa-chart-bar"></i>
+                <span>Data Summary</span></a>
+        </li>
+        {{-- <li class="nav-item {{ $page == 'category' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin_category_show') }}">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Category</span></a>
+        </li> --}}
+        {{-- <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin-post-show') }}">
+                <i class="fas fa-fw fa-file-alt"></i>
+                <span>Post</span></a>
+        </li> --}}
+        <li class="nav-item {{ $page == 'review_post' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin-review-post') }}">
+                <i class="fas fa-fw fa-file-alt"></i>
+                <span>Review Post</span>
+                @php
+                    $countPost = App\Models\Post::where('status', 'Pending')->count();
+                @endphp
+
+                @if ($countPost > 0)
+                    <span class="badge badge-danger ml-3">{{ $countPost }}</span>
+                @endif
+            </a>
         </li>
         <li class="nav-item {{ $page == 'sub-category' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_subCategory_show') }}">
@@ -77,10 +122,23 @@
                 <span>Price</span>
             </a>
         </li>
-        <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
+        {{-- <li class="nav-item {{ $page == 'post' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin-post-show') }}">
                 <i class="fas fa-fw fa-file-alt"></i>
                 <span>Post</span></a>
+        </li> --}}
+        <li class="nav-item {{ $page == 'review_post' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin-review-post') }}">
+                <i class="fas fa-fw fa-file-alt"></i>
+                <span>Review Post</span>
+                @php
+                    $countPost = App\Models\Post::where('status', 'Pending')->count();
+                @endphp
+
+                @if ($countPost > 0)
+                    <span class="badge badge-danger ml-3">{{ $countPost }}</span>
+                @endif
+            </a>
         </li>
         <li class="nav-item {{ $page == 'sub-category' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin_subCategory_show') }}">

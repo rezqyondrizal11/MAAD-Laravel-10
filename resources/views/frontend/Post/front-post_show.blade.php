@@ -1,6 +1,6 @@
 @extends('frontend.layouts2.main2')
 
-@section('title', 'MAD | Media')
+@section('title', 'ASET DIGITAL | Media')
 
 @section('container')
     <div class="container my-5">

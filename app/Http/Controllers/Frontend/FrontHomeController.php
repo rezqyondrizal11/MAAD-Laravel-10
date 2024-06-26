@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Like;
 use App\Models\Post;
+use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\SubCategoryPost;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -43,46 +45,67 @@ class FrontHomeController extends Controller
 
         $search = $request->input('search');
         $reso = Post::query()->distinct()->select('resolution')->get();
+
+        $selectedSubCategoryId = $request->input('sub_category_id');
+        $subcategory = SubCategory::get();
+        $subCategoryPostIds = SubCategoryPost::where('sub_category_id', $selectedSubCategoryId)->pluck('post_id');
+
         $extensions = ['png', 'jpg', 'jpeg', 'mp4', 'mkv', 'webm', 'mp3', 'm4a'];
-        $post = Post::where('name', 'like', '%' . $search . '%')
-            ->where(function ($query) use ($extensions, $search) {
-                $query->where('file', 'like', '%' . $extensions[0])
-                    ->orWhere('file', 'like', '%' . $extensions[1])
-                    ->orWhere('file', 'like', '%' . $extensions[2])
-                    ->orWhere('file', 'like', '%' . $extensions[3])
-                    ->orWhere('file', 'like', '%' . $extensions[4])
-                    ->orWhere('file', 'like', '%' . $extensions[5])
-                    ->orWhere('file', 'like', '%' . $extensions[6])
-                    ->orWhere('file', 'like', '%' . $extensions[7])
-                    ->orWhere('name', 'like', '%' . $search . '%');
-            })->orWhere('url', 'like', '%' . $search . '%')
-            ->latest()
-            ->with('rUser')
-            ->paginate(12);
-        return view('frontend.home', compact('post', 'reso'));
+        if ($selectedSubCategoryId) {
+            $post = Post::WhereIn('id', $subCategoryPostIds)
+                ->where('status', 'Selesai')
+                ->latest()
+                ->with('rUser')
+                ->paginate(12);
+        } else {
+            $post = Post::where('name', 'like', '%' . $search . '%')
+                ->where('status', 'Selesai')
+                ->where(function ($query) use ($extensions, $search) {
+                    $query->orWhereIn('file', $extensions);
+                    $query->orWhere('name', 'like', '%' . $search . '%');
+                })->orWhere('url', 'like', '%' . $search . '%')
+                ->where('status', 'Selesai')
+                ->latest()
+                ->with('rUser')
+                ->paginate(12);
+        }
+
+
+        return view('frontend.home', compact('post', 'reso', 'subcategory'));
     }
     public function photo(Request $request)
     {
         $search = $request->input('search_photo');
-        $extensions = ['png', 'jpg', 'jpeg'];
-
-        $post = Post::whereHas('rCategory', function ($query) {
-            $query->where('id', 3);
-        })->where(function ($query) use ($search, $extensions) {
-            $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere(function ($subquery) use ($search, $extensions) {
-                    $subquery->where('file', 'like', '%' . $extensions[0])
-                        ->orWhere('file', 'like', '%' . $extensions[1])
-                        ->orWhere('file', 'like', '%' . $extensions[2]);
-                })
-                ->orWhere('url', 'like', '%' . $search . '%')
-                ->orWhere('urlgd', 'like', '%' . $search . '%');
-        })->latest()
-            ->with('rUser')
-            ->paginate(12);
-
         $reso = Post::query()->distinct()->select('resolution')->get();
-        return view('frontend.home', compact('post', 'reso'));
+
+        $selectedSubCategoryId = $request->input('sub_category_id_photo');
+        $subcategory = SubCategory::get();
+        $subCategoryPostIds = SubCategoryPost::where('sub_category_id', $selectedSubCategoryId)->pluck('post_id');
+
+        $extensions = ['png', 'jpg', 'jpeg'];
+        if ($selectedSubCategoryId) {
+            $post = Post::whereIn('id', $subCategoryPostIds)
+                ->where('status', 'Selesai')
+                ->latest()
+                ->with('rUser')
+                ->paginate(12);
+        } else {
+            $post = Post::whereHas('rCategory', function ($query) {
+                $query->where('id', 3);
+            })
+                ->where('status', 'Selesai')
+                ->where(function ($query) use ($search, $extensions) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere(function ($subquery) use ($extensions) {
+                            $subquery->whereIn('file', $extensions);
+                        })
+                        ->orWhere('url', 'like', '%' . $search . '%')
+                        ->orWhere('urlgd', 'like', '%' . $search . '%');
+                })->latest()
+                ->with('rUser')
+                ->paginate(12);
+        }
+        return view('frontend.home', compact('post', 'reso', 'subcategory'));
     }
 
     public function reso(Request $request, $ukuran)
@@ -90,73 +113,130 @@ class FrontHomeController extends Controller
         $search = $request->input('search_photo');
         $pattern = 'photo';
         // $post = Post::where('name', 'like', '%' . $search . '%')->Where('file', 'like', '%' . $pattern . '%')->latest()->with('rUser')->get();
-        $post = Post::where('resolution', $ukuran)->where('name', 'like', '%' . $search . '%')->Where('file', 'like', '%' . $pattern . '%')->latest()->with('rUser')->paginate(8);
+        $post = Post::where('resolution', $ukuran)->where('status', 'Selesai')->where('name', 'like', '%' . $search . '%')->Where('file', 'like', '%' . $pattern . '%')->latest()->with('rUser')->paginate(8);
         $reso = Post::query()->distinct()->select('resolution')->get();
-        return view('frontend.home', compact('post', 'reso'));
+        $subcategory = SubCategory::get();
+        return view('frontend.home', compact('post', 'reso', 'subcategory'));
     }
 
     public function video(Request $request)
     {
         $search = $request->input('search_video');
-        $extensions = ['mp4', 'mkv', 'webm'];
-
-        $post = Post::whereHas('rCategory', function ($query) {
-            $query->where('id', 4);
-        })
-            ->where(function ($query) use ($search, $extensions) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere(function ($subquery) use ($search, $extensions) {
-                        $subquery->where('file', 'like', '%' . $extensions[0])
-                            ->orWhere('file', 'like', '%' . $extensions[1])
-                            ->orWhere('file', 'like', '%' . $extensions[2]);
-                    })
-                    ->orWhere('url', 'like', '%' . $search . '%')
-                    ->orWhere('urlgd', 'like', '%' . $search . '%');
-            })
-            ->latest()
-            ->with('rUser')
-            ->paginate(12);
-
         $reso = Post::query()->distinct()->select('resolution')->get();
 
-        return view('frontend.home', compact('post', 'reso'));
+        $selectedSubCategoryId = $request->input('sub_category_id_video');
+        $subcategory = SubCategory::get();
+        $subCategoryPostIds = SubCategoryPost::where('sub_category_id', $selectedSubCategoryId)->pluck('post_id');
+
+        $extensions = ['mp4', 'mkv', 'webm'];
+
+        if ($selectedSubCategoryId) {
+            // $post = Post::whereIn('id', $subCategoryPostIds)
+            //     ->where('status', 'Pending')
+            //     ->where(function ($query) use ($extensions) {
+            //         $query->where(function ($subquery) use ($extensions) {
+            //             foreach ($extensions as $extension) {
+            //                 $subquery->orWhere('file', 'like', '%' . $extension);
+            //             }
+            //         });
+            //     })
+            //     ->latest()
+            //     ->with('rUser')
+            //     ->paginate(12);
+            $post = Post::WhereIn('id', $subCategoryPostIds)
+                ->where('status', 'Selesai')
+                ->latest()
+                ->with('rUser')
+                ->paginate(12);
+        } else {
+            $post = Post::whereHas('rCategory', function ($query) {
+                $query->where('id', 4);
+            })
+                ->where('status', 'Selesai')
+                ->where(function ($query) use ($search, $extensions) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere(function ($subquery) use ($extensions) {
+                            $subquery->whereIn('file', $extensions);
+                        })
+                        ->orWhere('url', 'like', '%' . $search . '%')
+                        ->orWhere('urlgd', 'like', '%' . $search . '%');
+                })->latest()
+                ->with('rUser')
+                ->paginate(12);
+        }
+
+        return view('frontend.home', compact('post', 'reso', 'subcategory'));
     }
 
     public function audio(Request $request)
     {
-        // $search = $request->input('search_audio');
-        // $pattern = 'audio';
-        // $post = Post::where('name', 'like', '%' . $search . '%')->Where('file', 'like', '%' . $pattern . '%')->latest()->paginate(12);
-        // $reso = Post::query()->distinct()->select('resolution')->get();
-
         $search = $request->input('search_audio');
-        $extensions = ['mp3', 'm4a'];
-
-        $post = Post::whereHas('rCategory', function ($query) {
-            $query->where('id', 5);
-        })
-            ->where(function ($query) use ($search, $extensions) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere(function ($subquery) use ($search, $extensions) {
-                        $subquery->where('file', 'like', '%' . $extensions[0])
-                            ->orWhere('file', 'like', '%' . $extensions[1]);
-                    })
-                    ->orWhere('url', 'like', '%' . $search . '%')
-                    ->orWhere('urlgd', 'like', '%' . $search . '%');
-            })
-            ->latest()
-            ->with('rUser')
-            ->paginate(12);
-
         $reso = Post::query()->distinct()->select('resolution')->get();
 
-        return view('frontend.home', compact('post', 'reso'));
+        $selectedSubCategoryId = $request->input('sub_category_id_audio');
+        $subcategory = SubCategory::get();
+        $subCategoryPostIds = SubCategoryPost::where('sub_category_id', $selectedSubCategoryId)->pluck('post_id');
+
+        $extensions = ['mp3', 'm4a'];
+
+        if ($selectedSubCategoryId) {
+            // $post = Post::whereIn('id', $subCategoryPostIds)
+            //     ->where(function ($query) use ($extensions) {
+            //         $query->where(function ($subquery) use ($extensions) {
+            //             foreach ($extensions as $extension) {
+            //                 $subquery->orWhere('file', 'like', '%' . $extension);
+            //             }
+            //         });
+            //     })
+            //     ->latest()
+            //     ->with('rUser')
+            //     ->paginate(12);
+            $post = Post::WhereIn('id', $subCategoryPostIds)
+                ->where('status', 'Selesai')
+                ->latest()
+                ->with('rUser')
+                ->paginate(12);
+        } else {
+            $post = Post::whereHas('rCategory', function ($query) {
+                $query->where('id', 5);
+            })
+                ->where('status', 'Selesai')
+                ->where(function ($query) use ($search, $extensions) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere(function ($subquery) use ($extensions) {
+                            $subquery->whereIn('file', $extensions);
+                        })
+                        ->orWhere('url', 'like', '%' . $search . '%')
+                        ->orWhere('urlgd', 'like', '%' . $search . '%');
+                })->latest()
+                ->with('rUser')
+                ->paginate(12);
+        }
+
+        // $post = Post::whereHas('rCategory', function ($query) {
+        //     $query->where('id', 5);
+        // })
+        //     ->where(function ($query) use ($search, $extensions) {
+        //         $query->where('name', 'like', '%' . $search . '%')
+        //             ->orWhere(function ($subquery) use ($search, $extensions) {
+        //                 $subquery->where('file', 'like', '%' . $extensions[0])
+        //                     ->orWhere('file', 'like', '%' . $extensions[1]);
+        //             })
+        //             ->orWhere('url', 'like', '%' . $search . '%')
+        //             ->orWhere('urlgd', 'like', '%' . $search . '%');
+        //     })
+        //     ->latest()
+        //     ->with('rUser')
+        //     ->paginate(12);
+
+
+        return view('frontend.home', compact('post', 'reso', 'subcategory'));
     }
     public function detail($slug)
     {
         $page = 'detail';
-        $post = Post::where('slug', $slug)->first();
-        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->where('slug', '<>', $slug)->get();
+        $post = Post::where('slug', $slug)->where('status', 'Selesai')->first();
+        $posts = Post::inRandomOrder()->limit(8)->with('rUser')->where('slug', '<>', $slug)->where('status', 'Selesai')->get();
         $like = Like::where('post_id', $post->id)->count();
         $url = url('detail/' . $post->slug);
         $message = 'File from <a href="' . $url . '">' . $post->rUser->name . '</a> by UNP Asset';

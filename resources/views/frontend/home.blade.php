@@ -1,10 +1,26 @@
 @extends('frontend.layouts.main')
 
-@section('title', 'MAD')
+@section('title', 'ASET DIGITAL')
 
 @section('container')
 {{-- {{ phpinfo() }} --}}
     <div class="container mt-3">
+        {{-- Sub Kategori --}}
+        <div class="d-flex flex-row justify-content-center">
+            @foreach ($subcategory as $subcategoryItem)
+                @if (Request::path() == 'photo')
+                    <a href="{{ route('photo', ['sub_category_id_photo' => $subcategoryItem->id]) }}" class="btn btn-sm btn-light rounded-3 me-2 small shadow-sm text-secondary mt-3"><i class="bi bi-layers-half"></i> {{ $subcategoryItem->sub_category_name }}</a>
+                @elseif (Request::path() == 'video')
+                    <a href="{{ route('video', ['sub_category_id_video' => $subcategoryItem->id]) }}" class="btn btn-sm btn-light rounded-3 me-2 small shadow-sm text-secondary mt-3"><i class="bi bi-layers-half"></i> {{ $subcategoryItem->sub_category_name }}</a>
+                @elseif (Request::path() == 'audio')
+                    <a href="{{ route('audio', ['sub_category_id_audio' => $subcategoryItem->id]) }}" class="btn btn-sm btn-light rounded-3 me-2 small shadow-sm text-secondary mt-3"><i class="bi bi-layers-half"></i> {{ $subcategoryItem->sub_category_name }}</a>
+                @else
+                    <a href="{{ route('home', ['sub_category_id' => $subcategoryItem->id]) }}" class="btn btn-sm btn-light rounded-3 me-2 small shadow-sm text-secondary mt-3"><i class="bi bi-layers-half"></i> {{ $subcategoryItem->sub_category_name }}</a>
+                @endif
+            @endforeach
+        </div>
+        {{-- end Sub Kategori --}}
+
         {{-- Filter Resolution --}}
         <div class="btn-group dropend {{ Request::is('photo', 'photo/*') ? '' : 'd-none' }} mt-3">
             <button type="button" class="btn btn-danger btn-sm">

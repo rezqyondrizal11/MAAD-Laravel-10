@@ -55,6 +55,8 @@ Route::post('admin/reset-submit', [AdminLoginController::class, 'reset_submit'])
 //admin post
 Route::get('admin/post/show', [AdminPostController::class, 'show'])->name('admin-post-show')->middleware('admin:admin');
 Route::get('admin/post/delete/{slug}', [AdminPostController::class, 'delete'])->name('admin-post-delete')->middleware('admin:admin');
+Route::get('admin/review/post', [AdminPostController::class, 'review_post'])->name('admin-review-post')->middleware('admin:admin');
+Route::post('admin/review/post/acc/{slug}', [AdminPostController::class, 'acc_post'])->name('admin-post-acc')->middleware('admin:admin');
 //end admin post
 
 //admin category

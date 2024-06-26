@@ -60,4 +60,25 @@ class AdminPostController extends Controller
         $delete->delete();
         return redirect()->back()->with('success', 'Postingan dan file terkait berhasil dihapus.');
     }
+
+    public function review_post()
+    {
+        $page = 'review_post';
+        $posts = Post::with('rCategory')->with('rUser')->where('status', 'Pending')->latest()->paginate(9);
+        // $data = Post::latest()->get();
+        return view('admin.post.review_post', compact('posts', 'page'));
+    }
+
+    public function acc_post($slug)
+    {
+        $acc = Post::where('slug', $slug)->first();
+
+        if (!$acc) {
+            return redirect()->back()->with('error', 'Postingan tidak ditemukan.');
+        }
+
+        $acc->status = "Selesai";
+        $acc->update();
+        return redirect()->back()->with('success', 'Postingan telah di Acc.');
+    }
 }

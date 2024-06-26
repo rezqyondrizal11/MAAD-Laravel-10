@@ -1,5 +1,5 @@
 @extends('frontend.layouts2.main2')
-@section('title', 'MAD | Pay')
+@section('title', 'ASET DIGITAL | Pay')
 
 @section('container')
     <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->

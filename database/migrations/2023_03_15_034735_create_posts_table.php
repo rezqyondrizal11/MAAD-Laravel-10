@@ -33,6 +33,7 @@ return new class extends Migration
             // $table->string('q480p')->nullable();
             // $table->string('q360p')->nullable();
             $table->text('body');
+            $table->string('status')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
