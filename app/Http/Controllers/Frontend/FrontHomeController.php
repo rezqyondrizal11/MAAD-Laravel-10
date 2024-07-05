@@ -24,6 +24,19 @@ use Illuminate\Support\Facades\Response;
 
 class FrontHomeController extends Controller
 {
+    public function show_from_storage($folder, $filename)
+    {
+        $path = storage_path('app/public/uploads/' . $folder . '/' . $filename);
+
+        if (!file_exists($path)) {
+            abort(500);
+        }
+
+        $file = file_get_contents($path);
+        $type = mime_content_type($path);
+
+        return response($file)->header('Content-Type', $type);
+    }
     public function index(Request $request)
     {
         // echo phpinfo();

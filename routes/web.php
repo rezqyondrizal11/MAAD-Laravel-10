@@ -123,6 +123,7 @@ Route::get('/photo', [FrontHomeController::class, 'photo'])->name('photo');
 Route::get('/photo/{ukuran}', [FrontHomeController::class, 'reso'])->name('reso');
 Route::get('/video', [FrontHomeController::class, 'video'])->name('video');
 Route::get('/audio', [FrontHomeController::class, 'audio'])->name('audio');
+Route::get('/files/{folder}/{filename}', [FrontHomeController::class, 'show_from_storage'])->name('show-file');
 Route::get('/detail/{slug}', [FrontHomeController::class, 'detail'])->name('detail');
 Route::get('/detail/720p/{slug}', [FrontHomeController::class, 'detail_720p'])->name('720p');
 Route::get('/detail/480p/{slug}', [FrontHomeController::class, 'detail_480p'])->name('480p');
@@ -192,33 +193,15 @@ Route::get('/symlink', function () {
 });
 
 
-Route::get('files/{folder}/{filename}', function ($folder, $filename) {
-    $path = storage_path('app/public/uploads/' . $folder . '/' . $filename);
+// Route::get('files/{folder}/{filename}', function ($folder, $filename) {
+//     $path = storage_path('app/public/uploads/' . $folder . '/' . $filename);
 
-    if (!file_exists($path)) {
-        abort(500);
-    }
+//     if (!file_exists($path)) {
+//         abort(500);
+//     }
 
-    $file = file_get_contents($path);
-    $type = mime_content_type($path);
+//     $file = file_get_contents($path);
+//     $type = mime_content_type($path);
 
-    return response($file)->header('Content-Type', $type);
-})->name('show-file');
-
-Route::get('profile/{folder}/{filename}', function ($folder, $filename) {
-
-    // if ($folder === 'photo') {
-    //     $path = storage_path('app/public/uploads/' . $folder . '/compress' . '/' . $filename);
-    // } else {
-    $path = storage_path('app/public/uploads/photo/' . $folder . '/' . $filename);
-    // }
-
-    if (!file_exists($path)) {
-        abort(500);
-    }
-
-    $file = file_get_contents($path);
-    $type = mime_content_type($path);
-
-    return response($file)->header('Content-Type', $type);
-})->name('show-profile');
+//     return response($file)->header('Content-Type', $type);
+// })->name('show-file');
