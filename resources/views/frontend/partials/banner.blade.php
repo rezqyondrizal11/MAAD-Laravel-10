@@ -6,8 +6,8 @@
     </video>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-5">
-            <a class="navbar-brand" href="{{ route('home') }}"><img src="{{ asset('dist_frontend/img/CODIAS.png') }}"
-                    alt="" width="50px"></a>
+            <a class="navbar-brand" href="https://vokasi.unp.ac.id/animasi"><img
+                    src="{{ asset('dist_frontend/img/CODIAS.png') }}" alt="" width="50px"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

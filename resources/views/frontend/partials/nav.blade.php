@@ -1,7 +1,7 @@
 <nav class="navbar sticky-top navbar-expand-lg bg-black-custom shadow">
     <div class="container-fluid px-5">
-        <a class="navbar-brand" href="{{ route('home') }}"><img src="{{ asset('dist_frontend/img/CODIAS.png') }}"
-                alt="" width="50px"></a>
+        <a class="navbar-brand" href="https://vokasi.unp.ac.id/animasi"><img
+                src="{{ asset('dist_frontend/img/CODIAS.png') }}" alt="" width="50px"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
