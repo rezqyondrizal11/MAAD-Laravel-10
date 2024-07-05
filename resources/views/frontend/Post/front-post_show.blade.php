@@ -28,19 +28,12 @@
                         @foreach ($data as $item)
                             @php
                                 $ext = pathinfo($item->file, PATHINFO_EXTENSION);
-
-                                $path_video = asset('storage/uploads/video/' . $item->file);
-                                $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
-
-                                $path_audio = asset('storage/uploads/audio/' . $item->file);
-                                $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
-
                             @endphp
                             {{-- Photo --}}
                             @if (in_array($ext, ['jpg', 'png', 'jpeg']))
                                 <div class="col col-12 col-md-6 col-lg-3 mt-4" data-aos="fade-up" data-aos-duration="1200">
                                     <div class="card-custom shadow rounded-3 mx-auto">
-                                        <img src="{{ asset('uploads/photo/compress/' . $item->file) }}" alt="Card Image"
+                                        <img src="{{ url('files/photo/' . $item->file) }}" alt="Card Image"
                                             class="img-fluid" />
                                         <div class="category-logo">
                                             <i class="bi bi-image-fill"></i>
@@ -68,15 +61,15 @@
                                     <div class="card-custom shadow rounded-3 mx-auto">
                                         <video class="" controls>
                                             @if ($ext == 'mp4')
-                                                <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                                <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                                     type="video/mp4">
                                             @endif
                                             @if ($ext == 'mkv')
-                                                <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                                <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                                     type="video/mkv">
                                             @endif
                                             @if ($ext == 'webm')
-                                                <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                                <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                                     type="video/webm">
                                             @endif
                                         </video>
@@ -122,12 +115,12 @@
                                         <div class="deskripsi">
                                             <h5 class="fw-bold teks">{{ $item->name }}</h5>
                                             <p class="fs-6 teks">{{ $item->body }}</p>
-                                            @if ($extaudio == 'mp3')
-                                                <audio src="{{ asset('uploads/audio/' . $item->file) }}" type="audio/mp3"
+                                            @if ($ext == 'mp3')
+                                                <audio src="{{ url('files/audio/' . $item->file) }}" type="audio/mp3"
                                                     controls class="waudio border border-success rounded-5"></audio>
                                             @endif
-                                            @if ($extaudio == 'm4a')
-                                                <audio src="{{ asset('uploads/audio/' . $item->file) }}" type="audio/m4a"
+                                            @if ($ext == 'm4a')
+                                                <audio src="{{ url('files/audio/' . $item->file) }}" type="audio/m4a"
                                                     controls class="waudio border border-success rounded-5"></audio>
                                             @endif
                                             <a href="{{ route('detail', [$item->slug]) }}"

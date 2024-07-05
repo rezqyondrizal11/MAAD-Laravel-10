@@ -180,8 +180,8 @@
                                                 <td>{{ $post->name }}</td>
                                                 <td>
                                                     @if ($post->file)
-                                                        <img src="{{ $path_photo }}" alt="" class="img-fluid"
-                                                            style="max-height:12rem;">
+                                                        <img src="{{ url('files/photo/' . $post->file) }}" alt=""
+                                                            class="img-fluid" style="max-height:12rem;">
                                                     @endif
                                                     @if ($post->urlgd)
                                                         <iframe src="{{ $path_gd }}" style="max-height:12rem;"
@@ -209,16 +209,16 @@
                                                         <video class="object-fit-contain rounded-4" controls
                                                             style="max-height:12rem;">
                                                             @if ($extvideo == 'mp4')
-                                                                <source src="{{ $path_video }}" alt=""
-                                                                    type="video/mp4">
+                                                                <source src="{{ url('files/video/' . $post->file) }}"
+                                                                    alt="" type="video/mp4">
                                                             @endif
                                                             @if ($extvideo == 'mkv')
-                                                                <source src="{{ $path_video }}" alt=""
-                                                                    type="video/mkv">
+                                                                <source src="{{ url('files/video/' . $post->file) }}"
+                                                                    alt="" type="video/mkv">
                                                             @endif
                                                             @if ($extvideo == 'webm')
-                                                                <source src="{{ $path_video }}" alt=""
-                                                                    type="video/webm">
+                                                                <source src="{{ url('files/video/' . $post->file) }}"
+                                                                    alt="" type="video/webm">
                                                             @endif
                                                         </video>
                                                     @endif
@@ -250,12 +250,12 @@
                                                 <td>
                                                     @if ($post->file)
                                                         @if ($extaudio == 'mp3')
-                                                            <audio src="{{ $path_audio }}" type="audio/mp3"
-                                                                controls></audio>
+                                                            <audio src="{{ url('files/audio/' . $post->file) }}"
+                                                                type="audio/mp3" controls></audio>
                                                         @endif
                                                         @if ($extaudio == 'm4a')
-                                                            <audio src="{{ $path_audio }}" type="audio/m4a"
-                                                                controls></audio>
+                                                            <audio src="{{ url('files/audio/' . $post->file) }}"
+                                                                type="audio/m4a" controls></audio>
                                                         @endif
                                                     @endif
 

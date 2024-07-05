@@ -44,8 +44,8 @@
                                     {{-- <div class="card-header">{{ $post->name }}</div> --}}
                                     <div class="d-flex flex-row">
                                         @if ($post->file)
-                                            <img src="{{ $path_photo }}" alt="" class="img-fluid rounded-left"
-                                                style="height: 169px;">
+                                            <img src="{{ url('files/photo/' . $post->file) }}" alt=""
+                                                class="img-fluid rounded-left" style="height: 169px;">
                                         @endif
                                         @if ($post->urlgd)
                                             <iframe src="{{ $path_gd }}" style="height: 169px;" allow="autoplay"
@@ -79,13 +79,16 @@
                                         @if ($post->file)
                                             <video class="object-fit-contain rounded-left" controls style="height:169px;">
                                                 @if ($extvideo == 'mp4')
-                                                    <source src="{{ $path_video }}" alt="" type="video/mp4">
+                                                    <source src="{{ url('files/video/' . $post->file) }}" alt=""
+                                                        type="video/mp4">
                                                 @endif
                                                 @if ($extvideo == 'mkv')
-                                                    <source src="{{ $path_video }}" alt="" type="video/mkv">
+                                                    <source src="{{ url('files/video/' . $post->file) }}" alt=""
+                                                        type="video/mkv">
                                                 @endif
                                                 @if ($extvideo == 'webm')
-                                                    <source src="{{ $path_video }}" alt="" type="video/webm">
+                                                    <source src="{{ url('files/video/' . $post->file) }}" alt=""
+                                                        type="video/webm">
                                                 @endif
                                             </video>
                                         @endif
@@ -128,10 +131,12 @@
                                         @if ($post->file)
                                             <div class="d-flex align-items-center">
                                                 @if ($extaudio == 'mp3')
-                                                    <audio src="{{ $path_audio }}" type="audio/mp3" controls></audio>
+                                                    <audio src="{{ url('files/audio/' . $post->file) }}" type="audio/mp3"
+                                                        controls></audio>
                                                 @endif
                                                 @if ($extaudio == 'm4a')
-                                                    <audio src="{{ $path_audio }}" type="audio/m4a" controls></audio>
+                                                    <audio src="{{ url('files/audio/' . $post->file) }}" type="audio/m4a"
+                                                        controls></audio>
                                                 @endif
                                             </div>
                                         @endif
@@ -176,8 +181,8 @@
                                     <div class="modal-body text-center">
                                         @if ($post->category_id == 3)
                                             @if ($post->file)
-                                                <img src="{{ $path_photo }}" alt="" class="img-fluid "
-                                                    style="height: 169px;">
+                                                <img src="{{ url('files/photo/' . $post->file) }}" alt=""
+                                                    class="img-fluid " style="height: 169px;">
                                             @endif
                                             @if ($post->urlgd)
                                                 <iframe src="{{ $path_gd }}" style="height: 169px;"
@@ -188,16 +193,16 @@
                                                 <video class="object-fit-contain rounded-left" controls
                                                     style="height:169px;">
                                                     @if ($extvideo == 'mp4')
-                                                        <source src="{{ $path_video }}" alt=""
-                                                            type="video/mp4">
+                                                        <source src="{{ url('files/video/' . $post->file) }}"
+                                                            alt="" type="video/mp4">
                                                     @endif
                                                     @if ($extvideo == 'mkv')
-                                                        <source src="{{ $path_video }}" alt=""
-                                                            type="video/mkv">
+                                                        <source src="{{ url('files/video/' . $post->file) }}"
+                                                            alt="" type="video/mkv">
                                                     @endif
                                                     @if ($extvideo == 'webm')
-                                                        <source src="{{ $path_video }}" alt=""
-                                                            type="video/webm">
+                                                        <source src="{{ url('files/video/' . $post->file) }}"
+                                                            alt="" type="video/webm">
                                                     @endif
                                                 </video>
                                             @endif
@@ -212,12 +217,12 @@
                                             @if ($post->file)
                                                 <div class="">
                                                     @if ($extaudio == 'mp3')
-                                                        <audio src="{{ $path_audio }}" type="audio/mp3"
-                                                            controls></audio>
+                                                        <audio src="{{ url('files/audio/' . $post->file) }}"
+                                                            type="audio/mp3" controls></audio>
                                                     @endif
                                                     @if ($extaudio == 'm4a')
-                                                        <audio src="{{ $path_audio }}" type="audio/m4a"
-                                                            controls></audio>
+                                                        <audio src="{{ url('files/audio/' . $post->file) }}"
+                                                            type="audio/m4a" controls></audio>
                                                     @endif
                                                 </div>
                                             @endif

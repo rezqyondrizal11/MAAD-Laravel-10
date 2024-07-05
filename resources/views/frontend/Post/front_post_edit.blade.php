@@ -49,7 +49,7 @@
                                         <div class="col col-12 col-lg-8">
                                             <div class="card shadow">
                                                 <div class="card-body text-center" style="max-height:52rem;">
-                                                    <img src="{{ asset('uploads/photo/' . $post->file) }}"
+                                                    <img src="{{ url('files/photo/' . $post->file) }}"
                                                         class="img-fluid rounded-start shadow" alt="..."
                                                         style="max-height: 50rem">
                                                 </div>
@@ -64,16 +64,16 @@
                                             <div class="card shadow">
                                                 <video class="object-fit-contain" controls style="max-height:52rem;">
                                                     @if ($ext == 'mp4')
-                                                        <source src="{{ asset('uploads/video/' . $post->file) }}"
-                                                            alt="" type="video/mp4">
+                                                        <source src="{{ url('files/video/' . $post->file) }}" alt=""
+                                                            type="video/mp4">
                                                     @endif
                                                     @if ($ext == 'mkv')
-                                                        <source src="{{ asset('uploads/video/' . $post->file) }}"
-                                                            alt="" type="video/mkv">
+                                                        <source src="{{ url('files/video/' . $post->file) }}" alt=""
+                                                            type="video/mkv">
                                                     @endif
                                                     @if ($ext == 'webm')
-                                                        <source src="{{ asset('uploads/video/' . $post->file) }}"
-                                                            alt="" type="video/webm">
+                                                        <source src="{{ url('files/video/' . $post->file) }}" alt=""
+                                                            type="video/webm">
                                                     @endif
                                                 </video>
                                             </div>
@@ -88,11 +88,11 @@
                                                 <div class="card-body text-center">
                                                     <audio controls>
                                                         @if ($ext == 'mp3')
-                                                            <source src="{{ asset('uploads/audio/' . $post->file) }}"
+                                                            <source src="{{ url('files/audio/' . $post->file) }}"
                                                                 alt="" type="audio/mp3">
                                                         @endif
                                                         @if ($ext == 'm4a')
-                                                            <source src="{{ asset('uploads/audio/' . $post->file) }}"
+                                                            <source src="{{ url('files/audio/' . $post->file) }}"
                                                                 alt="" type="audio/m4a">
                                                         @endif
                                                     </audio>

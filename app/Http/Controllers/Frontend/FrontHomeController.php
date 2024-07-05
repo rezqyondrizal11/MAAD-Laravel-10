@@ -280,10 +280,10 @@ class FrontHomeController extends Controller
 
     public function download($file)
     {
-        $path_photo = public_path('uploads/photo/' . $file);
+        $path_photo = storage_path('app/public/uploads/photo/' . $file);
         $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
         if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg') {
-            $path = public_path('uploads/photo/' . $file);
+            $path = storage_path('app/public/uploads/photo/' . $file);
 
             if (!file_exists($path)) {
                 abort(404);
@@ -292,10 +292,10 @@ class FrontHomeController extends Controller
             return response()->download($path, $file, ['Content-Type' => $type]);
         }
 
-        $path_video = public_path('uploads/video/' . $file);
+        $path_video = storage_path('app/public/uploads/video/' . $file);
         $extvideo = pathinfo($path_video, PATHINFO_EXTENSION);
         if ($extvideo == 'mp4' || $extvideo == 'mkv' || $extvideo == 'webm') {
-            $path = public_path('uploads/video/' . $file);
+            $path = storage_path('app/public/uploads/video/' . $file);
 
             if (!file_exists($path)) {
                 abort(404);
@@ -304,10 +304,10 @@ class FrontHomeController extends Controller
             return response()->download($path, $file, ['Content-Type' => $type]);
         }
 
-        $path_audio = public_path('uploads/audio/' . $file);
+        $path_audio = storage_path('app/public/uploads/audio/' . $file);
         $extaudio = pathinfo($path_audio, PATHINFO_EXTENSION);
         if ($extaudio == 'mp3' || $extaudio == 'm4a') {
-            $path = public_path('uploads/audio/' . $file);
+            $path = storage_path('app/public/uploads/audio/' . $file);
 
             if (!file_exists($path)) {
                 abort(404);
@@ -368,7 +368,7 @@ class FrontHomeController extends Controller
 
     public function downloadRaw($file)
     {
-        $path_raw_photo = public_path('uploads/rawphoto/' . $file);
+        $path_raw_photo = storage_path('app/public/uploads/rawphoto/' . $file);
         $extrawphoto = pathinfo($path_raw_photo, PATHINFO_EXTENSION);
         if ($extrawphoto == 'eps' || $extrawphoto == 'psd' || $extrawphoto == 'ai' || $extrawphoto == 'cdr') {
             $path = $path_raw_photo;
@@ -379,7 +379,7 @@ class FrontHomeController extends Controller
             return response()->download($path, $file, ['Content-Type' => $type]);
         }
 
-        $path_raw_video = public_path('uploads/rawvideo/' . $file);
+        $path_raw_video = storage_path('app/public/uploads/rawvideo/' . $file);
         $extrawvideo = pathinfo($path_raw_video, PATHINFO_EXTENSION);
         if ($extrawvideo == 'aep' || $extrawvideo == 'aepx' || $extrawvideo == 'prproj') {
             $path = $path_raw_video;
@@ -391,7 +391,7 @@ class FrontHomeController extends Controller
         }
 
         if (($extrawphoto == 'zip' || $extrawphoto == 'rar') && file_exists($path_raw_photo)) {
-            $path = public_path('uploads/rawphoto/' . $file);
+            $path = storage_path('app/public/uploads/rawphoto/' . $file);
             if (!file_exists($path)) {
                 abort(404);
             }
@@ -400,7 +400,7 @@ class FrontHomeController extends Controller
         }
 
         if (($extrawvideo == 'zip' || $extrawvideo == 'rar') && file_exists($path_raw_video)) {
-            $path = public_path('uploads/rawvideo/' . $file);
+            $path = storage_path('app/public/uploads/rawvideo/' . $file);
             if (!file_exists($path)) {
                 abort(404);
             }
@@ -408,10 +408,10 @@ class FrontHomeController extends Controller
             return response()->download($path, $file, ['Content-Type' => $type]);
         }
 
-        $path_raw_audio = public_path('uploads/rawaudio/' . $file);
+        $path_raw_audio = storage_path('app/public/uploads/rawaudio/' . $file);
         $extrawaudio = pathinfo($path_raw_audio, PATHINFO_EXTENSION);
         if (($extrawaudio == 'zip' || $extrawaudio == 'rar') && file_exists($path_raw_audio)) {
-            $path = public_path('uploads/rawaudio/' . $file);
+            $path = storage_path('app/public/uploads/rawaudio/' . $file);
             if (!file_exists($path)) {
                 abort(404);
             }

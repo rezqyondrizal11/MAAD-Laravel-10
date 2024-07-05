@@ -5,13 +5,13 @@
             <div class="card shadow">
                 <video class="object-fit-contain" controls style="max-height:40rem;">
                     @if ($ext == 'mp4')
-                        <source src="{{ asset('uploads/video/' . $post->file) }}" alt="" type="video/mp4">
+                        <source src="{{ url('files/video/' . $post->file) }}" alt="" type="video/mp4">
                     @endif
                     @if ($ext == 'mkv')
-                        <source src="{{ asset('uploads/video/' . $post->file) }}" alt="" type="video/mkv">
+                        <source src="{{ url('files/video/' . $post->file) }}" alt="" type="video/mkv">
                     @endif
                     @if ($ext == 'webm')
-                        <source src="{{ asset('uploads/video/' . $post->file) }}" alt="" type="video/webm">
+                        <source src="{{ url('files/video/' . $post->file) }}" alt="" type="video/webm">
                     @endif
                 </video>
             </div>
@@ -29,15 +29,15 @@
                         <div class="card-custom shadow rounded-3 mx-auto">
                             <video class="" controls>
                                 @if ($extVideo == 'mp4')
-                                    <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                    <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                         type="video/mp4">
                                 @endif
                                 @if ($extVideo == 'mkv')
-                                    <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                    <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                         type="video/mkv">
                                 @endif
                                 @if ($extVideo == 'webm')
-                                    <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                    <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                         type="video/webm">
                                 @endif
                             </video>

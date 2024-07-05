@@ -193,12 +193,7 @@ Route::get('/symlink', function () {
 
 
 Route::get('files/{folder}/{filename}', function ($folder, $filename) {
-
-    // if ($folder === 'photo') {
-    //     $path = storage_path('app/public/uploads/' . $folder . '/compress' . '/' . $filename);
-    // } else {
     $path = storage_path('app/public/uploads/' . $folder . '/' . $filename);
-    // }
 
     if (!file_exists($path)) {
         abort(500);

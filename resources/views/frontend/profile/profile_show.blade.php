@@ -44,8 +44,8 @@
                                                 <div class="col col-12 col-md-6 col-lg-3 mt-4" data-aos="fade-up"
                                                     data-aos-duration="1200">
                                                     <div class="card-custom shadow rounded-3 mx-auto">
-                                                        <img src="{{ asset('uploads/photo/compress/' . $item->file) }}"
-                                                            alt="Card Image" class="img-fluid" />
+                                                        <img src="{{ url('files/photo/' . $item->file) }}" alt="Card Image"
+                                                            class="img-fluid" />
                                                         <div class="category-logo">
                                                             <i class="bi bi-image-fill"></i>
                                                         </div>

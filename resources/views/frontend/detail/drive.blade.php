@@ -18,8 +18,7 @@
                     @if (in_array($extPhoto, ['jpg', 'png', 'jpeg']))
                         <div class="col col-12 col-md-6 col-lg-4 mt-3" data-aos="fade-up" data-aos-duration="1200">
                             <div class="card-custom shadow rounded-3 mx-auto">
-                                <img src="{{ asset('uploads/photo/' . $item->file) }}" alt="Card Image"
-                                    class="img-fluid" />
+                                <img src="{{ url('files/photo/' . $item->file) }}" alt="Card Image" class="img-fluid" />
                                 <div class="category-logo">
                                     <i class="bi bi-image-fill"></i>
                                 </div>
@@ -61,15 +60,15 @@
                             <div class="card-custom shadow rounded-3 mx-auto">
                                 <video class="" controls>
                                     @if ($extVideo == 'mp4')
-                                        <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                        <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                             type="video/mp4">
                                     @endif
                                     @if ($extVideo == 'mkv')
-                                        <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                        <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                             type="video/mkv">
                                     @endif
                                     @if ($extVideo == 'webm')
-                                        <source src="{{ asset('uploads/video/' . $item->file) }}" alt=""
+                                        <source src="{{ url('files/video/' . $item->file) }}" alt=""
                                             type="video/webm">
                                     @endif
                                 </video>
@@ -146,11 +145,11 @@
                                     <h5 class="fw-bold teks">{{ $item->name }}</h5>
                                     <p class="fs-6 teks">{{ $item->body }}</p>
                                     @if ($extAudio == 'mp3')
-                                        <audio src="{{ asset('uploads/audio/' . $item->file) }}" type="audio/mp3"
+                                        <audio src="{{ url('files/audio/' . $item->file) }}" type="audio/mp3"
                                             controls class="waudio border border-success rounded-5"></audio>
                                     @endif
                                     @if ($extAudio == 'm4a')
-                                        <audio src="{{ asset('uploads/audio/' . $item->file) }}" type="audio/m4a"
+                                        <audio src="{{ url('files/audio/' . $item->file) }}" type="audio/m4a"
                                             controls class="waudio border border-success rounded-5"></audio>
                                     @endif
                                     <a href="{{ route('detail', [$item->slug]) }}"

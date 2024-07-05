@@ -25,8 +25,7 @@
         @endphp
         @if (in_array($ext, ['jpg', 'png', 'jpeg']))
             <div class="foto-profil rounded-pill shadow">
-                <img src="{{ asset('uploads/photo/profil/' . $show->foto_profil) }}" alt=""
-                    class="img-fluid rounded-pill">
+                <img src="{{ url('files/profil/' . $show->foto_profil) }}" alt="" class="img-fluid rounded-pill">
             </div>
         @elseif ($ext == '')
             <div class="pt-5">

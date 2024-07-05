@@ -21,8 +21,8 @@
                                 $ext = pathinfo(Auth::guard()->user()->foto_profil, PATHINFO_EXTENSION);
                             @endphp
                             @if (in_array($ext, ['jpg', 'png', 'jpeg']))
-                                <img src="{{ asset('uploads/photo/profil/' . Auth::guard()->user()->foto_profil) }}"
-                                    alt="" class="foto-profil-nav img-fluid rounded-5">
+                                <img src="{{ url('files/profil/' . Auth::guard()->user()->foto_profil) }}" alt=""
+                                    class="foto-profil-nav img-fluid rounded-5">
                                 {{-- <img src="{{ asset('dist_frontend/img/profile.jpg') }}" alt=""
                                             class="img-fluid rounded-pill"> --}}
                             @elseif ($ext == '')

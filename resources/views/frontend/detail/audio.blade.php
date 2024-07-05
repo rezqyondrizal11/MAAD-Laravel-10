@@ -19,10 +19,10 @@
             <div class="card-body text-center">
                 <audio controls>
                     @if ($ext == 'mp3')
-                        <source src="{{ asset('uploads/audio/' . $post->file) }}" alt="" type="audio/mp3">
+                        <source src="{{ url('files/audio/' . $post->file) }}" alt="" type="audio/mp3">
                     @endif
                     @if ($ext == 'm4a')
-                        <source src="{{ asset('uploads/audio/' . $post->file) }}" alt="" type="audio/m4a">
+                        <source src="{{ url('files/audio/' . $post->file) }}" alt="" type="audio/m4a">
                     @endif
                 </audio>
             </div>
@@ -57,11 +57,11 @@
                                 <h5 class="fw-bold teks">{{ $item->name }}</h5>
                                 <p class="fs-6 teks">{{ $item->body }}</p>
                                 @if ($extAudio == 'mp3')
-                                    <audio src="{{ asset('uploads/audio/' . $item->file) }}" type="audio/mp3" controls
+                                    <audio src="{{ url('files/audio/' . $item->file) }}" type="audio/mp3" controls
                                         class="waudio border border-success rounded-5"></audio>
                                 @endif
                                 @if ($extAudio == 'm4a')
-                                    <audio src="{{ asset('uploads/audio/' . $item->file) }}" type="audio/m4a" controls
+                                    <audio src="{{ url('files/audio/' . $item->file) }}" type="audio/m4a" controls
                                         class="waudio border border-success rounded-5"></audio>
                                 @endif
                                 <a href="{{ route('detail', [$item->slug]) }}"

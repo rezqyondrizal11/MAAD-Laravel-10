@@ -2,8 +2,8 @@
 @if (in_array($ext, ['jpg', 'png', 'jpeg']))
     <div class="col col-12 col-lg-8 order-2 order-lg-1">
         <div class="card shadow mt-5 rounded-4">
-            <img src="{{ asset('uploads/photo/' . $post->file) }}" class="img-fluid rounded-4 object-fit-cover"
-                alt="..." style="max-height: 40rem">
+            <img src="{{ url('files/photo/' . $post->file) }}" class="img-fluid rounded-4 object-fit-cover" alt="..."
+                style="max-height: 40rem">
         </div>
         {{-- Photo lainnya --}}
         <div class="row">
@@ -16,7 +16,7 @@
                 @if (in_array($extPhoto, ['jpg', 'png', 'jpeg']))
                     <div class="col col-12 col-md-6 col-lg-4 mt-3" data-aos="fade-up" data-aos-duration="1200">
                         <div class="card-custom shadow rounded-3 mx-auto">
-                            <img src="{{ asset('uploads/photo/' . $item->file) }}" alt="Card Image" class="img-fluid" />
+                            <img src="{{ url('files/photo/' . $item->file) }}" alt="Card Image" class="img-fluid" />
                             <div class="category-logo">
                                 <i class="bi bi-image-fill"></i>
                             </div>
