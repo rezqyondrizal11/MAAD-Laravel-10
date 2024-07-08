@@ -118,13 +118,13 @@
                                 <div class="mb-4">
                                     <label for="" class="form-label">File project sebelumnya</label><br>
                                     <div class="row">
-                                        <div class="col col-12 col-lg-3">
+                                        <div class="col col-12">
                                             @if ($extrawphoto || $extrawvideo || $extrawaudio)
-                                                <div class="card shadow rounded-5">
-                                                    <div class="p-2 text-center">
+                                                <div class="">
+                                                    <div class="p-2 d-flex text-center gap-2">
                                                         <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
-                                                            alt="" class="img-fluid"><br>
-                                                        <span class="small text-secondary">{{ $edit->file_mentah }}</span>
+                                                            alt="" class="img-fluid" style="max-height: 50px"><br>
+                                                        <span class="text-secondary pt-3">{{ $edit->file_mentah }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -202,13 +202,14 @@
                                 <div class="mb-4">
                                     <label for="" class="form-label">File project sebelumnya</label><br>
                                     <div class="row">
-                                        <div class="col col-12 col-lg-3">
+                                        <div class="col col-12">
                                             @if ($extrawphoto || $extrawvideo || $extrawaudio)
-                                                <div class="card shadow rounded-5">
-                                                    <div class="p-2 text-center">
+                                                <div class="">
+                                                    <div class="p-2 d-flex text-center gap-2">
                                                         <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
-                                                            alt="" class="img-fluid"><br>
-                                                        <span class="small text-secondary">{{ $edit->file_mentah }}</span>
+                                                            alt="" class="img-fluid"
+                                                            style="max-height: 50px"><br>
+                                                        <span class="text-secondary pt-3">{{ $edit->file_mentah }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -290,13 +291,14 @@
                                 <div class="mb-4">
                                     <label for="" class="form-label">File project sebelumnya</label><br>
                                     <div class="row">
-                                        <div class="col col-12 col-lg-3">
+                                        <div class="col col-12">
                                             @if ($extrawphoto || $extrawvideo || $extrawaudio)
-                                                <div class="card shadow rounded-5">
-                                                    <div class="p-2 text-center">
+                                                <div class="">
+                                                    <div class="p-2 d-flex text-center gap-2">
                                                         <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
-                                                            alt="" class="img-fluid"><br>
-                                                        <span class="small text-secondary">{{ $edit->file_mentah }}</span>
+                                                            alt="" class="img-fluid"
+                                                            style="max-height: 50px"><br>
+                                                        <span class="text-secondary pt-3">{{ $edit->file_mentah }}</span>
                                                     </div>
                                                 </div>
                                             @endif
@@ -356,23 +358,6 @@
                                 </div>
                             @endif
                         @endif
-
-
-                        {{-- <div class="form-group mb-3" id="input7">
-                            <label>Sub Kategori</label>
-                            <div class="d-flex flex-row">
-                                @foreach ($subcategory as $item)
-                                    <div class="form-check ms-2 small">
-                                        <input class="form-check-input" type="checkbox" value="{{ $item->id }}"
-                                            id="{{ $item->sub_category_name }}" name="sub_category_ids[]"
-                                            @if (in_array($item->id, $selectedSubCategories)) checked @endif>
-                                        <label class="form-check-label" for="{{ $item->sub_category_name }}">#
-                                            {{ $item->sub_category_name }}
-                                        </label>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div> --}}
 
                         <div class="form-group mb-3">
                             <label>Sub Kategori</label>

@@ -29,6 +29,7 @@ class AdminLoginController extends Controller
 
         $store->nama = $request->nama;
         $store->email = $request->email;
+        $store->nidn = $request->nidn;
         $store->password = Hash::make($request->password);
         $store->role = 'Dosen';
         $store->save();
@@ -43,12 +44,16 @@ class AdminLoginController extends Controller
     public function login_submit(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            // 'email' => 'required|email',
+            'user' => 'required',
             'password' => 'required'
         ]);
 
+        $login_type = filter_var($request->user, FILTER_VALIDATE_EMAIL) ? 'email' : 'nidn';
+
         $credentials = [
-            'email' => $request->email,
+            // 'email' => $request->email,
+            $login_type => $request->user,
             'password' => $request->password
         ];
 

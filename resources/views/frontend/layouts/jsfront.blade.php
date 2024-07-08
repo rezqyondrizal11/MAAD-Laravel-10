@@ -15,7 +15,6 @@
         document.execCommand("copy");
         $('#exampleModal').modal('hide');
         $('#modalCopy').modal('show');
-        // alert("Teks berhasil dicopy");
     }
 </script>
 {{-- end copy --}}

@@ -172,8 +172,10 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title text-capitalize text-primary" id="exampleModalLongTitle">
-                                            {{ $post->name }}</h5>
+                                        <h6 class="modal-title text-capitalize" id="exampleModalLongTitle">
+                                            <span class="text-primary">{{ $post->rCategory->name ?? '' }}</span> |
+                                            {{ $post->rUser->name }}
+                                        </h6>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -231,10 +233,21 @@
                                                     allow="autoplay" class="rounded-left"></iframe>
                                             @endif
                                         @endif
+
+                                        @if ($post->file_mentah)
+                                            <div class="d-flex justify-content-center">
+                                                <div class="p-2 d-flex text-center">
+                                                    <img src="{{ asset('dist_frontend/img/zip-folder.png') }}"
+                                                        alt="" class="img-fluid" style="max-height: 30px"><br>
+                                                    <span
+                                                        class="text-secondary pt-2 pl-2 small">{{ $post->file_mentah }}</span>
+                                                </div>
+                                            </div>
+                                        @else
+                                        @endif
                                     </div>
                                     <div class="modal-body">
-                                        <p class="mb-1">Kategori : <span
-                                                class="text-success">{{ $post->rCategory->name }}</span></p>
+                                        <p class="mb-1 font-weight-bold text-dark text-capitalize">{{ $post->name }}</p>
                                         <p>{{ $post->body }}</p>
                                     </div>
                                     <div class="modal-footer">

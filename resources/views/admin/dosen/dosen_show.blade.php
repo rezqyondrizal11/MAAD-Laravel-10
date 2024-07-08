@@ -24,6 +24,7 @@
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>Email</th>
+                                        <th>NIDN</th>
                                         <th>Status</th>
                                         <th style="min-width: 10rem">Action</th>
                                     </tr>
@@ -33,9 +34,10 @@
                                         @if ($item->role == 'Dosen' || $item->role == 'Dosen Reviewer')
                                             <tr>
                                                 <td>{{ $loop->iteration - 1 }}</td>
-                                                <td>{{ $item->nama }}</td>
-                                                <td>{{ $item->email }}</td>
-                                                <td>{{ $item->role }}</td>
+                                                <td>{{ $item->nama ?? '' }}</td>
+                                                <td>{{ $item->email ?? '' }}</td>
+                                                <td>{{ $item->nidn ?? '' }}</td>
+                                                <td>{{ $item->role ?? '' }}</td>
                                                 <td>
                                                     <a href="{{ route('admin_dosen_edit', $item->nama) }}"
                                                         class="btn btn-sm btn-success"><i class="fa fa-edit"></i>

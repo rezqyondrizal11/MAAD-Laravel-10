@@ -70,7 +70,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Foto Profil</label>
                                     @php
-                                        $path_photo = asset('storage/uploads/photo/profil/' . $show->foto_profil);
+                                        $path_photo = url('files/profil/' . $show->foto_profil);
                                         $extphoto = pathinfo($path_photo, PATHINFO_EXTENSION);
                                     @endphp
                                     @if ($extphoto == 'jpg' || $extphoto == 'png' || $extphoto == 'jpeg')

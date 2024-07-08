@@ -1,5 +1,5 @@
 {{-- Awal Nav2 --}}
-<div class="container-fluid mt-5 pt-5 sticky-top">
+<div class="container-fluid mt-5 pt-5">
     @auth
         {{-- @if (Auth::guard('web')->user()->id == ) --}}
             @if (Request::is('posts/create/*') ||

@@ -12,12 +12,17 @@
                     <div class="mb-3">
                         <label class="form-label text-dark ">Name</label>
                         <input type="text" class="form-control" id="name" placeholder="Name"
-                            value="{{ $edit->nama }}" name="name">
+                            value="{{ $edit->nama ?? '' }}" name="name">
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-dark ">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="Email"
-                            value="{{ $edit->email }}" name="email">
+                            value="{{ $edit->email ?? '' }}" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark ">NIDN</label>
+                        <input type="text" class="form-control" id="nidn" placeholder="NIDN"
+                            value="{{ $edit->nidn ?? '' }}" name="nidn">
                     </div>
                     <div class="form-group mb-3">
                         <label>Role</label>

@@ -8,10 +8,10 @@
             <div class="col col-12">
                 <div class="container px-5 py-3">
                     <div class="row">
-                        <p class="fs-3 text-start pt-3 text-black-custom">Profile {{ $show->name }}
+                        {{-- <p class="fs-3 text-start pt-3 text-black-custom">Profile {{ $show->name }}
                         </p>
 
-                        <hr>
+                        <hr> --}}
 
                         <div class="col col-12">
                             <div class="card-body">

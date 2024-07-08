@@ -25,10 +25,10 @@ class AdminDashboardController extends Controller
         $audioCount = Post::where('category_id', 5)->count();
 
         $usersWithPostCount = User::leftJoin('posts', 'users.id', '=', 'posts.user_id')
-            ->select('users.*', DB::raw('count(posts.id) as post_count'))
-            ->groupBy('users.id')
-            ->orderBy('post_count', 'desc') // Mengurutkan berdasarkan post_count secara descending
-            ->take(5) // Mengambil 5 hasil pertama
+            ->select('users.*', DB::raw('count(posts.id) as post_count')) // Sertakan semua kolom non-agregat yang digunakan dalam SELECT
+            ->groupBy('users.id', 'users.name', 'users.nim', 'users.skill', 'users.gender', 'users.foto_profil', 'users.about', 'users.status', 'users.place', 'users.contract', 'users.email', 'users.hp', 'users.instagram', 'users.twitter', 'users.password', 'users.token', 'users.role', 'users.premium_expiry', 'users.created_at', 'users.updated_at') // Sertakan semua kolom non-agregat dalam GROUP BY
+            ->orderBy('post_count', 'desc')
+            ->take(5)
             ->get();
 
         $usersNIM = $usersWithPostCount->map(function ($user) {
@@ -48,8 +48,8 @@ class AdminDashboardController extends Controller
                 DB::raw('count(case when posts.category_id = 4 then 1 else null end) as video_count'),
                 DB::raw('count(case when posts.category_id = 5 then 1 else null end) as audio_count'),
             )
-            ->groupBy('users.id')
-            ->orderBy('post_count', 'desc') // Mengurutkan berdasarkan post_count secara descending
+            ->groupBy('users.id', 'users.name', 'users.nim', 'users.skill', 'users.gender', 'users.foto_profil', 'users.about', 'users.status', 'users.place', 'users.contract', 'users.email', 'users.hp', 'users.instagram', 'users.twitter', 'users.password', 'users.token', 'users.role', 'users.premium_expiry', 'users.created_at', 'users.updated_at') // Sertakan semua kolom non-agregat dalam GROUP BY
+            ->orderBy('post_count', 'desc')
             ->get();
 
         $userNIM = $userPost->map(function ($user) {

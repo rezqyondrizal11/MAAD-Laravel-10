@@ -17,7 +17,10 @@
                         <label class="form-label text-dark ">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="Email" name="email">
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label text-dark ">NIDN</label>
+                        <input type="text" class="form-control" id="nidn" placeholder="NIDN" name="nidn">
+                    </div>
                     <div class="mb-3">
                         <label class="form-label text-dark ">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="Password" name="password">

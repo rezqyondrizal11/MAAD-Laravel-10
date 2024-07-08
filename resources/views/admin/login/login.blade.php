@@ -42,11 +42,10 @@
                                                 </div>
 
                                                 <div class="form-outline mt-4 text-start">
-                                                    <label class="form-label" for="form2Example17">Email
-                                                        address</label>
-                                                    <input type="email" id="form2Example17" class="form-control"
-                                                        name="email" />
-                                                    @error('email')
+                                                    <label class="form-label" for="form2Example17">User</label>
+                                                    <input type="text" id="form2Example17" class="form-control"
+                                                        name="user" />
+                                                    @error('user')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>

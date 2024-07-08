@@ -32,6 +32,7 @@ class AdminDosenController extends Controller
         $dosen_store = new Admin();
         $dosen_store->nama = $request->name;
         $dosen_store->email = $request->email;
+        $dosen_store->nidn = $request->nidn;
         $dosen_store->password = Hash::make($request->password);
         $dosen_store->role = 'Dosen';
         $dosen_store->save();
@@ -55,6 +56,7 @@ class AdminDosenController extends Controller
         $dosen_update = Admin::where('nama', $nama)->first();
         $dosen_update->nama = $request->name;
         $dosen_update->email = $request->email;
+        $dosen_update->nidn = $request->nidn;
         $dosen_update->role = $request->role;
 
         if (!empty($request->password)) {

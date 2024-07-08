@@ -140,9 +140,9 @@ class FrontPostController extends Controller
                 $ext = $request->file('file')->extension();
                 $final = 'photo' . time() . '.' . $ext;
 
-                // Kompresi gambar
-                $compressedImage = Image::make($files)->encode($ext, 10);
-                $resolution = $compressedImage->height() . "x" . $compressedImage->width();
+                // Mendapatkan resolusi
+                $image = Image::make($files);
+                $resolution = $image->height() . "x" . $image->width();
 
                 // $compressedImage->save(storage_path('app/public/uploads/photo/compress/') . $final);
 

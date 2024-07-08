@@ -55,6 +55,14 @@
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
+                                                <div class="form-outline mt-4 text-start">
+                                                    <label class="form-label" for="form2Example17">NIDN</label>
+                                                    <input type="text" id="form2Example17" class="form-control"
+                                                        name="nidn" />
+                                                    @error('nidn')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
 
                                                 <div class="form-outline my-4 text-start">
                                                     <label class="form-label">Password</label>

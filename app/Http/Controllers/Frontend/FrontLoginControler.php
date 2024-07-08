@@ -15,11 +15,14 @@ class FrontLoginControler extends Controller
     public function login_submit(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'user' => 'required',
             'password' => 'required'
         ]);
+
+        $login_type = filter_var($request->user, FILTER_VALIDATE_EMAIL) ? 'email' : 'nim';
+
         $credentials = [
-            'email' => $request->email,
+            $login_type => $request->user,
             'password' => $request->password
         ];
         if (Auth::attempt($credentials)) {

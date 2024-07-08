@@ -270,9 +270,11 @@
                         @csrf
                         @method('POST')
                         <div class="py-3">
-                            <label class="form-label">Email address</label>
-                            <input type="email" class="form-control form-control-sm" name='email' id="email"
-                                aria-describedby="emailHelp">
+                            <label class="form-label">User</label>
+                            {{-- <input type="email" class="form-control form-control-sm" name='email' id="email"
+                                aria-describedby="emailHelp"> --}}
+                            <input type="text" class="form-control form-control-sm" name='user' id="user"
+                                aria-describedby="userHelp">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
